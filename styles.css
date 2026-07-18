@@ -2,10 +2,10 @@
 
 :root{
   --ink:#241f1c;
-  --ivory:#fbf6ef;
+  --ivory:#daad98;
   --paper:#f4ede0;
-  --bottle:#1f3b2c;
-  --bottle-light:#2f5641;
+  --bottle:#ffffff;
+  --bottle-light:#ffffff;
   --gold:#c89b3c;
   --gold-light:#e8c77a;
   --rose:#c97b84;
@@ -78,7 +78,7 @@ button{font-family:inherit; cursor:pointer;}
 /* ---------- header ---------- */
 header.site{
   position:sticky; top:0; z-index:50;
-  background:rgba(251,246,239,0.92);
+  background: var(--ivory);
   backdrop-filter:blur(8px);
   border-bottom:1px solid var(--line);
 }
@@ -147,7 +147,7 @@ header.site{
   line-height:1.05;
 }
 .hero p.lede{
-  font-size:1.08rem; max-width:46ch; color:#4a423c; margin:18px 0 30px;
+  font-size:1.08rem; max-width:46ch; color:#ffffff; margin:18px 0 30px;
 }
 .hero__actions{display:flex; gap:16px; flex-wrap:wrap;}
 
@@ -206,15 +206,21 @@ header.site{
 @media (max-width:460px){ .grid-products{grid-template-columns:1fr;} }
 
 .product-card{
-  background:#fff; border-radius:var(--radius); overflow:hidden;
-  box-shadow:var(--shadow); display:flex; flex-direction:column;
+  background:var(--ivory); border-radius:var(--radius); overflow:hidden;
+  box-shadow:var(--ivory); display:flex; flex-direction:column;
 }
 .product-card__art{
   aspect-ratio:1/1; position:relative; overflow:hidden;
   background:var(--paper);
+  border : 3px solid #fff;
+  border-radius: 10px;
 }
-.product-card__art svg{width:100%; height:100%; transition:transform .5s ease;}
-.product-card:hover .product-card__art svg{transform:scale(1.06) rotate(-1deg);}
+.product-card__art img{
+   width:290px;
+   height:200px; 
+   transition:transform .5s ease;
+  }
+.product-card:hover .product-card__art img {transform:scale(1.06)}
 .product-card__badge{
   position:absolute; top:10px; left:10px; z-index:2;
   background:var(--rose); color:#fff; font-size:.65rem; letter-spacing:.05em;

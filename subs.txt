@@ -1,0 +1,6 @@
+${p.badge ? `<span class="product-card__badge">${p.badge}</span>` : ""}
+      ${resinArt(p.shape, p.a, p.b)}
+
+      #740c22
+
+      #690b20

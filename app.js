@@ -162,8 +162,7 @@ function productCardHTML(p){
   return `
   <article class="product-card">
     <div class="product-card__art">
-      ${p.badge ? `<span class="product-card__badge">${p.badge}</span>` : ""}
-      ${resinArt(p.shape, p.a, p.b)}
+      <img src="Website PICTURES/${p.id}.jpg" alt="${p.name}" loading="lazy"/>
     </div>
     <div class="product-card__body">
       <span class="product-card__cat">${collection ? collection.name : ""}</span>
@@ -211,7 +210,7 @@ function renderHeader(active){
             <circle cx="20" cy="20" r="18" fill="#c89b3c" opacity="0.85"/>
             <circle cx="16" cy="17" r="10" fill="#1f3b2c" opacity="0.85"/>
           </svg>
-          Amber &amp; Bloom
+          Set &amp; Cure
         </a>
         <nav class="nav__links" data-nav>${navLinks}</nav>
         <div class="nav__actions">
