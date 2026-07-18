@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Collections — Amber &amp; Bloom Resin Co.</title>
+<meta name="description" content="Browse resin art collections: nikkah plaques, preserved flower jewellery, clocks, religious art and more.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div data-header></div>
+
+<main>
+  <section class="page-hero wrap">
+    <span class="eyebrow">Shop by moment</span>
+    <h1>Collections</h1>
+    <p>Eight collections, one hand behind every pour. Pick a collection to see everything in it.</p>
+  </section>
+
+  <section class="section wrap">
+    <div class="grid-collections" data-collections-grid style="grid-template-columns:repeat(2,1fr);"></div>
+  </section>
+</main>
+
+<div data-footer></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  renderHeader("Collections");
+  renderFooter();
+
+  document.querySelector("[data-collections-grid]").innerHTML =
+    COLLECTIONS.map(c=>`
+      <a class="collection-card" href="products.html?collection=${c.key}" style="aspect-ratio:16/11;">
+        ${resinBlobBackground(c.a, c.b)}
+        <div class="collection-card__label">
+          <span class="eyebrow">Collection</span>
+          <h3>${c.name}</h3>
+          <p style="color:rgba(255,255,255,.85); font-size:.88rem; margin:6px 0 0;">${c.desc}</p>
+        </div>
+      </a>
+    `).join("");
+</script>
+</body>
+</html>

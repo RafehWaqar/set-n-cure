@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Amber &amp; Bloom Resin Co.</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div data-header></div>
+
+<main>
+  <section class="page-hero wrap">
+    <span class="eyebrow">Step 2 of 2</span>
+    <h1>Checkout</h1>
+    <p>Made-to-order pieces begin production once your order is placed.</p>
+  </section>
+
+  <section class="section wrap" data-checkout-root>
+    <!-- filled by JS -->
+  </section>
+</main>
+
+<div data-footer></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  renderHeader();
+  renderFooter();
+
+  const root = document.querySelector("[data-checkout-root]");
+  const lines = cartLinesWithProducts();
+
+  if(!lines.length){
+    root.innerHTML = `
+      <div class="empty-cart">
+        <h3>Your cart is empty</h3>
+        <p style="color:#5b524b; margin-bottom:22px;">Add something before checking out.</p>
+        <a href="products.html" class="btn btn-primary">Shop products</a>
+      </div>`;
+  } else {
+    const user = getCurrentUser();
+    const subtotal = cartSubtotal();
+
+    root.innerHTML = `
+      <div class="checkout-layout">
+        <div class="form-card">
+          <h3>Delivery details</h3>
+          <p class="form-sub">${user ? `Checking out as <strong>${user.email}</strong>.` : `Checking out as a guest. <a href="account.html?next=checkout.html" style="color:var(--rose); font-weight:600;">Log in</a> to save this order to your account.`}</p>
+
+          <div class="demo-note">This is a demo storefront: no real payment is collected and no order actually ships. Placing an order just saves it to your account history on this device.</div>
+
+          <form data-checkout-form novalidate>
+            <div class="field-row">
+              <div class="field">
+                <label for="fname">Full name</label>
+                <input id="fname" required value="${user ? user.name : ''}">
+              </div>
+              <div class="field">
+                <label for="phone">Phone number</label>
+                <input id="phone" required placeholder="03xx-xxxxxxx">
+              </div>
+            </div>
+            <div class="field">
+              <label for="addr">Street address</label>
+              <input id="addr" required placeholder="House no, street, area">
+            </div>
+            <div class="field-row">
+              <div class="field">
+                <label for="city">City</label>
+                <input id="city" required placeholder="Faisalabad">
+              </div>
+              <div class="field">
+                <label for="postal">Postal code</label>
+                <input id="postal" placeholder="Optional">
+              </div>
+            </div>
+
+            <h3 style="margin-top:26px;">Payment</h3>
+            <p class="form-sub">Simulated for this demo &mdash; no card details are stored anywhere.</p>
+            <div class="field">
+              <label for="paymethod">Payment method</label>
+              <select id="paymethod">
+                <option>Cash on delivery</option>
+                <option>Card on file (demo)</option>
+                <option>Bank transfer</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width:100%; margin-top:10px;">Place order &mdash; ${money(subtotal + SHIPPING_FLAT)}</button>
+          </form>
+        </div>
+
+        <div class="summary-card">
+          <h3>Order summary</h3>
+          ${lines.map(l=>`
+            <div class="order-line">
+              <span class="order-line__name">${l.product.name} &times; ${l.qty}</span>
+              <span>${money(l.product.price * l.qty)}</span>
+            </div>`).join("")}
+          <div class="summary-row" style="margin-top:10px;"><span>Subtotal</span><span>${money(subtotal)}</span></div>
+          <div class="summary-row"><span>Shipping</span><span>${money(SHIPPING_FLAT)}</span></div>
+          <div class="summary-row total"><span>Total</span><span>${money(subtotal + SHIPPING_FLAT)}</span></div>
+        </div>
+      </div>`;
+
+    document.querySelector("[data-checkout-form]").addEventListener("submit", (e)=>{
+      e.preventDefault();
+      const address = {
+        name: document.getElementById("fname").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        street: document.getElementById("addr").value.trim(),
+        city: document.getElementById("city").value.trim(),
+        postal: document.getElementById("postal").value.trim(),
+        method: document.getElementById("paymethod").value,
+      };
+      if(!address.name || !address.phone || !address.street || !address.city){
+        showToast("Please fill in the required fields");
+        return;
+      }
+      const result = placeOrder(address);
+      if(result.ok){
+        sessionStorage.setItem("abr_last_order", JSON.stringify(result.order));
+        location.href = "order-confirmation.html";
+      } else {
+        showToast(result.error);
+      }
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account — Amber &amp; Bloom Resin Co.</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div data-header></div>
+
+<main>
+  <section class="page-hero wrap">
+    <span class="eyebrow">Your account</span>
+    <h1 data-title>My account</h1>
+    <p data-subtitle>Log in to track orders and check out faster next time.</p>
+  </section>
+
+  <section class="section wrap" data-account-root>
+    <!-- filled by JS -->
+  </section>
+</main>
+
+<div data-footer></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  renderHeader();
+  renderFooter();
+
+  const params = new URLSearchParams(location.search);
+  const nextUrl = params.get("next") || "index.html";
+  const root = document.querySelector("[data-account-root]");
+
+  function renderLoggedOut(){
+    document.querySelector("[data-title]").textContent = "Log in or create an account";
+    document.querySelector("[data-subtitle]").textContent = "Track orders and skip re-typing your address next time.";
+    root.innerHTML = `
+      <div class="auth-panel">
+        <div class="account-tabs">
+          <button class="active" data-tab="login">Log in</button>
+          <button data-tab="signup">Create account</button>
+        </div>
+
+        <div data-panel-login>
+          <div class="form-error" data-login-error></div>
+          <form data-login-form>
+            <div class="field">
+              <label for="login-email">Email</label>
+              <input id="login-email" type="email" required>
+            </div>
+            <div class="field">
+              <label for="login-password">Password</label>
+              <input id="login-password" type="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;">Log in</button>
+          </form>
+        </div>
+
+        <div data-panel-signup style="display:none;">
+          <div class="form-error" data-signup-error></div>
+          <form data-signup-form>
+            <div class="field">
+              <label for="signup-name">Full name</label>
+              <input id="signup-name" required>
+            </div>
+            <div class="field">
+              <label for="signup-email">Email</label>
+              <input id="signup-email" type="email" required>
+            </div>
+            <div class="field">
+              <label for="signup-password">Password</label>
+              <input id="signup-password" type="password" required minlength="4">
+              <p class="field-note">Demo account only &mdash; don't reuse a real password.</p>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width:100%;">Create account</button>
+          </form>
+        </div>
+      </div>`;
+
+    document.querySelectorAll(".account-tabs button").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        document.querySelectorAll(".account-tabs button").forEach(b=>b.classList.remove("active"));
+        btn.classList.add("active");
+        const isLogin = btn.dataset.tab === "login";
+        document.querySelector("[data-panel-login]").style.display = isLogin ? "block" : "none";
+        document.querySelector("[data-panel-signup]").style.display = isLogin ? "none" : "block";
+      });
+    });
+
+    document.querySelector("[data-login-form]").addEventListener("submit", (e)=>{
+      e.preventDefault();
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value;
+      const res = login(email, password);
+      const err = document.querySelector("[data-login-error]");
+      if(res.ok){
+        showToast("Welcome back!");
+        renderHeader();
+        location.href = nextUrl;
+      } else {
+        err.textContent = res.error;
+        err.classList.add("show");
+      }
+    });
+
+    document.querySelector("[data-signup-form]").addEventListener("submit", (e)=>{
+      e.preventDefault();
+      const name = document.getElementById("signup-name").value.trim();
+      const email = document.getElementById("signup-email").value;
+      const password = document.getElementById("signup-password").value;
+      const res = signup(name, email, password);
+      const err = document.querySelector("[data-signup-error]");
+      if(res.ok){
+        showToast("Account created");
+        renderHeader();
+        location.href = nextUrl;
+      } else {
+        err.textContent = res.error;
+        err.classList.add("show");
+      }
+    });
+  }
+
+  function renderLoggedIn(){
+    const user = getCurrentUser();
+    document.querySelector("[data-title]").textContent = "Welcome back, " + user.name.split(" ")[0];
+    document.querySelector("[data-subtitle]").textContent = user.email;
+
+    const orders = ordersForCurrentUser();
+
+    root.innerHTML = `
+      <div class="account-dashboard">
+        <div class="account-side">
+          <h3>${user.name}</h3>
+          <p>${user.email}</p>
+          <button class="btn btn-ghost" data-logout>Log out</button>
+        </div>
+        <div>
+          <h2 style="font-size:1.3rem; margin-bottom:16px;">Order history</h2>
+          <div data-orders-list></div>
+        </div>
+      </div>`;
+
+    document.querySelector("[data-logout]").addEventListener("click", ()=>{
+      logout();
+      renderHeader();
+      renderAccountPage();
+    });
+
+    const list = document.querySelector("[data-orders-list]");
+    if(!orders.length){
+      list.innerHTML = `<div class="empty-cart" style="padding:40px 20px;">
+        <h3>No orders yet</h3>
+        <p style="color:#5b524b; margin-bottom:20px;">Once you check out, your orders will show up here.</p>
+        <a href="products.html" class="btn btn-primary">Shop products</a>
+      </div>`;
+    } else {
+      list.innerHTML = orders.map(o=>`
+        <div class="order-card">
+          <div class="order-card__head">
+            <div>
+              <div class="order-card__id">Order ${o.id}</div>
+              <div class="order-card__meta">${new Date(o.date).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}</div>
+            </div>
+            <span class="order-status">${o.status}</span>
+          </div>
+          ${o.items.map(i=>`
+            <div class="order-line">
+              <span class="order-line__name">${i.name} &times; ${i.qty}</span>
+              <span>${money(i.price * i.qty)}</span>
+            </div>`).join("")}
+          <div class="summary-row total"><span>Total</span><span>${money(o.total)}</span></div>
+        </div>
+      `).join("");
+    }
+  }
+
+  function renderAccountPage(){
+    if(getCurrentUser()) renderLoggedIn();
+    else renderLoggedOut();
+  }
+
+  renderAccountPage();
+</script>
+</body>
+</html>

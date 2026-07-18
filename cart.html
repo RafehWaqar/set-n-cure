@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Cart — Amber &amp; Bloom Resin Co.</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div data-header></div>
+
+<main>
+  <section class="page-hero wrap">
+    <span class="eyebrow">Step 1 of 2</span>
+    <h1>Your cart</h1>
+    <p>Review your pieces before checkout. Everything is made to order once you check out.</p>
+  </section>
+
+  <section class="section wrap" data-cart-root>
+    <!-- filled by JS -->
+  </section>
+</main>
+
+<div data-footer></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  renderHeader();
+  renderFooter();
+
+  function renderCart(){
+    const root = document.querySelector("[data-cart-root]");
+    const lines = cartLinesWithProducts();
+
+    if(!lines.length){
+      root.innerHTML = `
+        <div class="empty-cart">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="50" cy="50" r="46" fill="#f4ede0"/>
+            <circle cx="50" cy="50" r="30" fill="none" stroke="#c89b3c" stroke-width="3" opacity="0.6"/>
+          </svg>
+          <h3>Your cart is empty</h3>
+          <p style="color:#5b524b; margin-bottom:22px;">Nothing poured in yet &mdash; go find a piece you love.</p>
+          <a href="products.html" class="btn btn-primary">Shop products</a>
+        </div>`;
+      return;
+    }
+
+    const subtotal = cartSubtotal();
+
+    root.innerHTML = `
+      <div class="cart-layout">
+        <div>
+          <div data-lines></div>
+        </div>
+        <div class="summary-card">
+          <h3>Order summary</h3>
+          <div class="summary-row"><span>Subtotal</span><span>${money(subtotal)}</span></div>
+          <div class="summary-row"><span>Shipping</span><span>${money(SHIPPING_FLAT)}</span></div>
+          <div class="summary-row total"><span>Total</span><span>${money(subtotal + SHIPPING_FLAT)}</span></div>
+          <a href="checkout.html" class="btn btn-primary">Proceed to checkout</a>
+          <a href="products.html" class="btn btn-ghost" style="margin-top:10px;">Continue shopping</a>
+        </div>
+      </div>`;
+
+    document.querySelector("[data-lines]").innerHTML = lines.map(l=>{
+      const c = COLLECTIONS.find(c=>c.key===l.product.cat);
+      return `
+      <div class="cart-line" data-line="${l.id}">
+        <div class="cart-line__art">${resinArt(l.product.shape, l.product.a, l.product.b)}</div>
+        <div>
+          <span class="cart-line__cat">${c ? c.name : ""}</span>
+          <div class="cart-line__name">${l.product.name}</div>
+          <div class="qty-stepper">
+            <button aria-label="Decrease quantity" onclick="changeQty('${l.id}', ${l.qty-1})">&minus;</button>
+            <span>${l.qty}</span>
+            <button aria-label="Increase quantity" onclick="changeQty('${l.id}', ${l.qty+1})">+</button>
+          </div>
+        </div>
+        <div class="cart-line__right">
+          <span class="cart-line__price">${money(l.product.price * l.qty)}</span>
+          <button class="remove-link" onclick="changeQty('${l.id}', 0)">Remove</button>
+        </div>
+      </div>`;
+    }).join("");
+  }
+
+  function changeQty(id, qty){
+    updateCartQty(id, qty);
+    renderCart();
+  }
+
+  renderCart();
+</script>
+</body>
+</html>

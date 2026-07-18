@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Products — Amber &amp; Bloom Resin Co.</title>
+<meta name="description" content="Shop the full catalogue of handmade resin art: plaques, jewellery, clocks, coasters and more.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div data-header></div>
+
+<main>
+  <section class="page-hero wrap">
+    <span class="eyebrow">The full catalogue</span>
+    <h1>Products</h1>
+    <p>Every piece below is made to order. Filter by collection to find what you're after.</p>
+  </section>
+
+  <section class="section wrap">
+    <div class="filter-bar" data-filters></div>
+    <div class="grid-products" data-product-grid></div>
+    <div class="empty-state" data-empty style="display:none;">
+      <h3>Nothing here yet</h3>
+      <p>Try a different collection, or view the full catalogue.</p>
+    </div>
+  </section>
+</main>
+
+<div data-footer></div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+  renderHeader("Products");
+  renderFooter();
+
+  const params = new URLSearchParams(location.search);
+  let activeCat = params.get("collection") || "all";
+
+  function renderFilters(){
+    const chips = [{key:"all", name:"All"}, ...COLLECTIONS];
+    document.querySelector("[data-filters]").innerHTML = chips.map(c=>`
+      <button class="chip ${activeCat===c.key?'active':''}" data-cat="${c.key}">${c.name}</button>
+    `).join("");
+    document.querySelectorAll(".chip").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        activeCat = btn.dataset.cat;
+        const url = new URL(location);
+        if(activeCat==="all") url.searchParams.delete("collection");
+        else url.searchParams.set("collection", activeCat);
+        history.replaceState({}, "", url);
+        renderFilters();
+        renderGrid();
+      });
+    });
+  }
+
+  function renderGrid(){
+    const list = activeCat==="all" ? PRODUCTS : PRODUCTS.filter(p=>p.cat===activeCat);
+    document.querySelector("[data-product-grid]").innerHTML = list.map(p=>productCardHTML(p)).join("");
+    document.querySelector("[data-empty]").style.display = list.length ? "none" : "block";
+  }
+
+  renderFilters();
+  renderGrid();
+</script>
+</body>
+</html>
