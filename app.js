@@ -162,7 +162,7 @@ function productCardHTML(p){
   return `
   <article class="product-card">
     <div class="product-card__art">
-      <img src="Website PICTURES/${p.id}.jpg" alt="${p.name}" loading="lazy"/>
+      <img src="${p.id}.jpg" alt="${p.name}" loading="lazy"/>
     </div>
     <div class="product-card__body">
       <span class="product-card__cat">${collection ? collection.name : ""}</span>
