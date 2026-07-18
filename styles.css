@@ -216,8 +216,8 @@ header.site{
   border-radius: 10px;
 }
 .product-card__art img{
-   width:290px;
-   height:200px; 
+   width:100%;
+   height:100%; 
    transition:transform .5s ease;
   }
 .product-card:hover .product-card__art img {transform:scale(1.06)}
