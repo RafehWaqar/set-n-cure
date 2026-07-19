@@ -4,3 +4,17 @@ ${p.badge ? `<span class="product-card__badge">${p.badge}</span>` : ""}
       #740c22
 
       #690b20
+
+      #daad98
+
+      ink #241f1c
+
+      ${resinBlobBackground(c.a, c.b)}
+
+      <img src="Website PICTURES/${c.key}.jpg" alt="${c.name}" loading="lazy"/>
+
+      background:linear-gradient(0deg, rgba(31,20,15,.72), transparent 70%);
+
+      padding:7px 14px;
+
+      @media (max-width:460px){ .grid-products{grid-template-columns:1fr;} } product grid

@@ -162,7 +162,7 @@ function productCardHTML(p){
   return `
   <article class="product-card">
     <div class="product-card__art">
-      <img src="${p.id}.jpg" alt="${p.name}" loading="lazy"/>
+      <img src="Website PICTURES/${p.id}.jpg" alt="${p.name}" loading="lazy"/>
     </div>
     <div class="product-card__body">
       <span class="product-card__cat">${collection ? collection.name : ""}</span>
@@ -178,7 +178,7 @@ function productCardHTML(p){
 function collectionCardHTML(c, big){
   return `
   <a class="collection-card" href="products.html?collection=${c.key}" style="${big?"aspect-ratio:16/10":""}">
-    ${resinBlobBackground(c.a, c.b)}
+    
     <div class="collection-card__label">
       <span class="eyebrow">Collection</span>
       <h3>${c.name}</h3>
@@ -233,7 +233,7 @@ function renderFooter(){
       <div class="wrap">
         <div class="footer-grid">
           <div>
-            <div class="footer-logo">Amber &amp; Bloom Resin Co.</div>
+            <div class="footer-logo">Set &amp; Cure</div>
             <p style="max-width:34ch; font-size:.9rem; color:#b6ac9f;">Small-batch resin art and preserved-flower keepsakes, poured to order.</p>
           </div>
           <div>
