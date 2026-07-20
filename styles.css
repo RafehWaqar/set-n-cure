@@ -57,7 +57,26 @@ button{font-family:inherit; cursor:pointer;}
 }
 
 /* ---------- layout helpers ---------- */
-.wrap{max-width:1240px; margin:0 auto; padding:0 32px;}
+.wrap{ 
+  max-width:1240px;
+  margin:0 auto; 
+  padding: 0 32px;
+}
+
+.first { 
+  max-width: 1fr;
+  background: url('Website PICTURES/coasters.jpg');
+  background-size: cover;
+  background-position: center;
+  margin-top: 20px;
+}
+
+.first-section {
+  width: 150%;
+  height: 110%;
+  background: var(--ivory);
+  padding: 20px 32px;
+}
 @media (max-width:640px){ .wrap{padding:0 20px;} }
 
 /* ---------- ticker ---------- */
