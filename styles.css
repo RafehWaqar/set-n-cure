@@ -560,9 +560,6 @@ footer.site a:hover{color:var(--gold-light);}
 .confirm-box svg{width:70px; height:70px; margin:0 auto 18px;}
 
 @media (max-width: 720px){
-  body {
-    overflow-x: hidden;
-  }
   
   .grid-products,
   .grid-collections{
