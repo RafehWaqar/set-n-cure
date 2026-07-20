@@ -504,3 +504,40 @@ footer.site a:hover{color:var(--gold-light);}
   text-align:center; max-width:560px; margin:0 auto; padding:40px 20px;
 }
 .confirm-box svg{width:70px; height:70px; margin:0 auto 18px;}
+
+@media (max-width: 720px){
+  .grid-products,
+  .grid-collections{
+    display:flex;
+    grid-template-columns:none;
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scroll-padding-left:20px;
+    gap:16px;
+    margin:0 -20px;
+    padding:4px 20px 18px;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .grid-products::-webkit-scrollbar,
+  .grid-collections::-webkit-scrollbar{
+    display:none;
+  }
+ 
+  .grid-products > *{
+    scroll-snap-align:start;
+    flex:0 0 72%;
+    min-width:72%;
+  }
+  .grid-collections > *{
+    scroll-snap-align:start;
+    flex:0 0 80%;
+    min-width:80%;
+    aspect-ratio:4/5 !important;
+  }
+}
+ 
+@media (max-width: 460px){
+  .grid-products > *{ flex-basis:82%; min-width:82%; }
+  .grid-collections > *{ flex-basis:86%; min-width:86%; }
+}
