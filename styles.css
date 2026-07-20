@@ -232,6 +232,8 @@ header.site{
 .product-card__art img{
    width:100%;
    height:100%; 
+   object-fit: cover;
+   object-position: center;
    transition:transform .5s ease;
   }
 .product-card:hover .product-card__art img {transform:scale(1.06)}
