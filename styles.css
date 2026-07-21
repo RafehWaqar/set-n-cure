@@ -160,7 +160,7 @@ header.site{
 .cart-btn{
   position:relative; display:flex; align-items:center; gap:6px;
   font-size:.88rem; border:1px solid var(--bottle); background:none;
-  padding:8px 14px; border-radius:999px; color:var(--bottle);
+  padding:5px 14px; border-radius:999px; color:var(--bottle);
 }
 .cart-btn:hover{background:var(--bottle); color:var(--ivory);}
 .cart-count{
