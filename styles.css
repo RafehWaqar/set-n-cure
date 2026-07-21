@@ -327,7 +327,6 @@ header.site{
   margin-top: 20px;
   margin-left: -3px;
   width : 110%;
-  width : 100%;
   display: block;
   border:1px solid var(--bottle); 
   background:none;
