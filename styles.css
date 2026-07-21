@@ -189,8 +189,10 @@ header.site{
 
 /* ---------- hero ---------- */
 .hero{
-  padding:70px 0 40px;
-  display:grid; grid-template-columns:1.05fr .95fr; gap:50px; align-items:center;
+  padding:50px 100px 40px;
+  display:grid;
+  grid-template-columns:1.05fr .95fr; gap:50px;
+  align-items:center;
 }
 @media (max-width:900px){ 
   .hero{
