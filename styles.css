@@ -283,7 +283,10 @@ header.site{
   aspect-ratio:1/1; position:relative; overflow:hidden;
   background:var(--paper);
   border : 3px solid #fff;
+  border-bottom: 8px solid #fff;
   border-radius: 10px;
+  position: relative;
+  left: 10px;
 }
 .product-card__art img{
    width:100%;
@@ -322,6 +325,8 @@ header.site{
 .add-btn{
   position : relative;
   margin-top: 20px;
+  margin-left: -3px;
+  width : 110%;
   width : 100%;
   display: block;
   border:1px solid var(--bottle); 
