@@ -24,15 +24,17 @@
 
 <div data-footer></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
 <script>
+(async function(){
   renderHeader();
   renderFooter();
-
+ 
   const root = document.querySelector("[data-checkout-root]");
   const lines = cartLinesWithProducts();
-
+ 
   if(!lines.length){
     root.innerHTML = `
       <div class="empty-cart">
@@ -41,17 +43,21 @@
         <a href="products.html" class="btn btn-primary">Shop products</a>
       </div>`;
   } else {
-    const user = getCurrentUser();
+    const user = await getCurrentUser();
+    if(!user){
+      location.href = "account.html?next=checkout.html";
+      return;
+    }
     const subtotal = cartSubtotal();
-
+ 
     root.innerHTML = `
       <div class="checkout-layout">
         <div class="form-card">
           <h3>Delivery details</h3>
-          <p class="form-sub">${user ? `Checking out as <strong>${user.email}</strong>.` : `Checking out as a guest. <a href="account.html?next=checkout.html" style="color:var(--rose); font-weight:600;">Log in</a> to save this order to your account.`}</p>
-
-          <div class="demo-note">This is a demo storefront: no real payment is collected and no order actually ships. Placing an order just saves it to your account history on this device.</div>
-
+          <p class="form-sub">Checking out as <strong>${user.email}</strong>.</p>
+ 
+          <div class="demo-note">No real payment is collected here yet — swap in a real payment gateway before taking real orders. Orders are saved for real to your account.</div>
+ 
           <form data-checkout-form novalidate>
             <div class="field-row">
               <div class="field">
@@ -77,7 +83,7 @@
                 <input id="postal" placeholder="Optional">
               </div>
             </div>
-
+ 
             <h3 style="margin-top:26px;">Payment</h3>
             <p class="form-sub">Simulated for this demo &mdash; no card details are stored anywhere.</p>
             <div class="field">
@@ -88,11 +94,11 @@
                 <option>Bank transfer</option>
               </select>
             </div>
-
+ 
             <button type="submit" class="btn btn-primary" style="width:100%; margin-top:10px;">Place order &mdash; ${money(subtotal + SHIPPING_FLAT)}</button>
           </form>
         </div>
-
+ 
         <div class="summary-card">
           <h3>Order summary</h3>
           ${lines.map(l=>`
@@ -105,8 +111,8 @@
           <div class="summary-row total"><span>Total</span><span>${money(subtotal + SHIPPING_FLAT)}</span></div>
         </div>
       </div>`;
-
-    document.querySelector("[data-checkout-form]").addEventListener("submit", (e)=>{
+ 
+    document.querySelector("[data-checkout-form]").addEventListener("submit", async (e)=>{
       e.preventDefault();
       const address = {
         name: document.getElementById("fname").value.trim(),
@@ -120,7 +126,7 @@
         showToast("Please fill in the required fields");
         return;
       }
-      const result = placeOrder(address);
+      const result = await placeOrder(address);
       if(result.ok){
         sessionStorage.setItem("abr_last_order", JSON.stringify(result.order));
         location.href = "order-confirmation.html";
@@ -129,6 +135,7 @@
       }
     });
   }
+})();
 </script>
 </body>
 </html>

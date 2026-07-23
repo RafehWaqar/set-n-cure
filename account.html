@@ -24,16 +24,18 @@
 
 <div data-footer></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
 <script>
+(async function(){
   renderHeader();
   renderFooter();
-
+ 
   const params = new URLSearchParams(location.search);
   const nextUrl = params.get("next") || "index.html";
   const root = document.querySelector("[data-account-root]");
-
+ 
   function renderLoggedOut(){
     document.querySelector("[data-title]").textContent = "Log in or create an account";
     document.querySelector("[data-subtitle]").textContent = "Track orders and skip re-typing your address next time.";
@@ -43,7 +45,7 @@
           <button class="active" data-tab="login">Log in</button>
           <button data-tab="signup">Create account</button>
         </div>
-
+ 
         <div data-panel-login>
           <div class="form-error" data-login-error></div>
           <form data-login-form>
@@ -58,7 +60,7 @@
             <button type="submit" class="btn btn-primary" style="width:100%;">Log in</button>
           </form>
         </div>
-
+ 
         <div data-panel-signup style="display:none;">
           <div class="form-error" data-signup-error></div>
           <form data-signup-form>
@@ -79,7 +81,7 @@
           </form>
         </div>
       </div>`;
-
+ 
     document.querySelectorAll(".account-tabs button").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         document.querySelectorAll(".account-tabs button").forEach(b=>b.classList.remove("active"));
@@ -89,33 +91,33 @@
         document.querySelector("[data-panel-signup]").style.display = isLogin ? "none" : "block";
       });
     });
-
-    document.querySelector("[data-login-form]").addEventListener("submit", (e)=>{
+ 
+    document.querySelector("[data-login-form]").addEventListener("submit", async (e)=>{
       e.preventDefault();
       const email = document.getElementById("login-email").value;
       const password = document.getElementById("login-password").value;
-      const res = login(email, password);
+      const res = await login(email, password);
       const err = document.querySelector("[data-login-error]");
       if(res.ok){
         showToast("Welcome back!");
-        renderHeader();
+        await renderHeader();
         location.href = nextUrl;
       } else {
         err.textContent = res.error;
         err.classList.add("show");
       }
     });
-
-    document.querySelector("[data-signup-form]").addEventListener("submit", (e)=>{
+ 
+    document.querySelector("[data-signup-form]").addEventListener("submit", async (e)=>{
       e.preventDefault();
       const name = document.getElementById("signup-name").value.trim();
       const email = document.getElementById("signup-email").value;
       const password = document.getElementById("signup-password").value;
-      const res = signup(name, email, password);
+      const res = await signup(name, email, password);
       const err = document.querySelector("[data-signup-error]");
       if(res.ok){
-        showToast("Account created");
-        renderHeader();
+        showToast("Account created — check your email to confirm it, if confirmation is enabled on your project.");
+        await renderHeader();
         location.href = nextUrl;
       } else {
         err.textContent = res.error;
@@ -123,14 +125,13 @@
       }
     });
   }
-
-  function renderLoggedIn(){
-    const user = getCurrentUser();
+ 
+  async function renderLoggedIn(user){
     document.querySelector("[data-title]").textContent = "Welcome back, " + user.name.split(" ")[0];
     document.querySelector("[data-subtitle]").textContent = user.email;
-
-    const orders = ordersForCurrentUser();
-
+ 
+    const orders = await ordersForCurrentUser();
+ 
     root.innerHTML = `
       <div class="account-dashboard">
         <div class="account-side">
@@ -143,13 +144,13 @@
           <div data-orders-list></div>
         </div>
       </div>`;
-
-    document.querySelector("[data-logout]").addEventListener("click", ()=>{
-      logout();
-      renderHeader();
+ 
+    document.querySelector("[data-logout]").addEventListener("click", async ()=>{
+      await logout();
+      await renderHeader();
       renderAccountPage();
     });
-
+ 
     const list = document.querySelector("[data-orders-list]");
     if(!orders.length){
       list.innerHTML = `<div class="empty-cart" style="padding:40px 20px;">
@@ -163,7 +164,7 @@
           <div class="order-card__head">
             <div>
               <div class="order-card__id">Order ${o.id}</div>
-              <div class="order-card__meta">${new Date(o.date).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}</div>
+              <div class="order-card__meta">${new Date(o.created_at).toLocaleDateString("en-GB", {day:"numeric", month:"short", year:"numeric"})}</div>
             </div>
             <span class="order-status">${o.status}</span>
           </div>
@@ -177,13 +178,15 @@
       `).join("");
     }
   }
-
-  function renderAccountPage(){
-    if(getCurrentUser()) renderLoggedIn();
+ 
+  async function renderAccountPage(){
+    const user = await getCurrentUser();
+    if(user) renderLoggedIn(user);
     else renderLoggedOut();
   }
-
-  renderAccountPage();
+ 
+  await renderAccountPage();
+})();
 </script>
 </body>
 </html>

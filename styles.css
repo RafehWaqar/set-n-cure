@@ -73,7 +73,7 @@ button{font-family:inherit; cursor:pointer;}
 
 .first { 
   max-width: 1fr;
-  background: url('coasters.jpg');
+  background: url('Website PICTURES/coasters.jpg');
   background-size: cover;
   background-position: center;
   margin-top: 20px;
@@ -92,16 +92,7 @@ button{font-family:inherit; cursor:pointer;}
   }
 }
 
-@media (max-width:640px){ 
-  .wrap{
-    padding:0 20px;
-  }
-  .first-section {
-    width: 100%;
-    height: 100%;
-    padding: 20px 20px;
-  }
-}
+
 
 /* ---------- ticker ---------- */
 .ticker{
@@ -206,6 +197,7 @@ header.site{
     padding: 20px 20px;
   }
 }
+
 .hero h1{
   font-size:clamp(2.4rem, 4.6vw, 3.6rem);
   line-height:1.05;
@@ -267,7 +259,7 @@ header.site{
   position:relative; border-radius:var(--radius); overflow:hidden;
   aspect-ratio:4/5; display:flex; align-items:flex-end;
   box-shadow:var(--shadow);
-  background-image : url('coasters.jpg');
+  background-image : url('Website PICTURES/coasters.jpg');
 }
 .collection-card svg{
   position:absolute; inset:0; width:100%; height:100%;}
@@ -284,7 +276,11 @@ header.site{
 .grid-products{
   display:grid; grid-template-columns:repeat(4,1fr); gap:40px;
 }
-@media (max-width:980px){ .grid-products{grid-template-columns:repeat(3,1fr);} }
+@media (max-width:980px){
+   .grid-products{
+      grid-template-columns:repeat(3,1fr);
+    }
+}
 @media (max-width:720px){ .grid-products{grid-template-columns:repeat(2,1fr);} }
 
 
@@ -295,6 +291,7 @@ header.site{
   box-shadow:var(--ivory); 
   display:flex; 
   flex-direction:column;
+  
 }
 .product-card__art{
   aspect-ratio:1/1; position:relative; overflow:hidden;
@@ -307,11 +304,11 @@ header.site{
 }
 .product-card__art img{
    width:100%;
-   height:100%; 
+   height:100%;
    object-fit: cover;
    object-position: center;
    transition:transform .5s ease;
-  }
+}
 .product-card:hover .product-card__art img {transform:scale(1.06)}
 .product-card__badge{
   position:absolute; top:10px; left:10px; z-index:2;
@@ -585,12 +582,12 @@ footer.site a:hover{color:var(--gold-light);}
 .confirm-box svg{width:70px; height:70px; margin:0 auto 18px;}
 
 @media (max-width: 720px){
-  
+
   .grid-products,
   .grid-collections{
     display:flex;
     grid-template-columns:none;
-    overflow-x:auto;
+    overflow-x: auto;
     scroll-snap-type:x mandatory;
     scroll-padding-left:20px;
     gap:16px;
@@ -621,3 +618,5 @@ footer.site a:hover{color:var(--gold-light);}
   .grid-products > *{ flex-basis:82%; min-width:82%; }
   .grid-collections > *{ flex-basis:86%; min-width:86%; }
 }
+
+

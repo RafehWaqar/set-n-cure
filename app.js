@@ -1,11 +1,19 @@
 /* =========================================================
    Amber & Bloom — shared front-end logic
-   Cart, checkout and accounts are simulated entirely in the
-   browser using localStorage. There is no real server, so:
-     - orders are not actually shipped or charged
-     - "accounts" are not secure — do not reuse a real password
-   Swap this for real auth/payment endpoints before going live.
+
+   Cart stays in localStorage (it's fine for pre-purchase, throwaway
+   state). Accounts and orders now use Supabase (Postgres + built-in
+   auth) — see backend/schema.sql for the table this depends on.
+   Fill in your own project's URL and anon key below; both are safe
+   to expose in client-side code (that's what row-level security in
+   schema.sql is for — it's what actually restricts access).
    ========================================================= */
+const SUPABASE_URL = "https://oqakvkmgrccubejxrzwm.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYWt2a21ncmNjdWJlanhyendtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3OTc5NDQsImV4cCI6MjEwMDM3Mzk0NH0.lu7pDu_M_uxKJ0lb9OXZPjnlQGIhBizm8N5xV1OMSok";
+if(typeof window.supabase === "undefined"){
+  console.error("Supabase client library not found. Make sure the CDN <script> tag for @supabase/supabase-js comes BEFORE app.js in every HTML file.");
+}
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* ---------- cart ----------
    cart shape: [{ id, qty }] */
@@ -62,45 +70,42 @@ function updateCartCount(){
 }
 
 /* ---------- accounts ----------
-   users: { [email]: { name, email, password, addresses:[] } }
-   demo-only "password storage" — never do this for a real product. */
-function getUsers(){
-  try{ return JSON.parse(localStorage.getItem("abr_users") || "{}"); }
-  catch(e){ return {}; }
+   Handled by Supabase Auth. "name" is stored in the user's
+   metadata at signup time rather than a separate table, since
+   that's all we need beyond what auth.users already tracks. */
+async function getCurrentUser(){
+  try{
+    const { data: { user } } = await supabase.auth.getUser();
+    if(!user) return null;
+    return { id:user.id, email:user.email, name: user.user_metadata?.name || user.email };
+  }catch(e){
+    console.error("Supabase auth check failed:", e);
+    return null;
+  }
 }
-function saveUsers(users){
-  localStorage.setItem("abr_users", JSON.stringify(users));
-}
-function getCurrentUserEmail(){
-  return localStorage.getItem("abr_current_user") || null;
-}
-function getCurrentUser(){
-  const email = getCurrentUserEmail();
-  if(!email) return null;
-  return getUsers()[email] || null;
-}
-function signup(name, email, password){
-  email = email.trim().toLowerCase();
-  const users = getUsers();
-  if(users[email]) return {ok:false, error:"An account with that email already exists. Try logging in instead."};
-  users[email] = {name, email, password, addresses:[]};
-  saveUsers(users);
-  localStorage.setItem("abr_current_user", email);
+async function signup(name, email, password){
+  const { error } = await supabase.auth.signUp({
+    email: email.trim().toLowerCase(),
+    password,
+    options: { data: { name } }
+  });
+  if(error) return {ok:false, error:error.message};
   return {ok:true};
 }
-function login(email, password){
-  email = email.trim().toLowerCase();
-  const users = getUsers();
-  const user = users[email];
-  if(!user || user.password !== password) return {ok:false, error:"That email and password don't match any account."};
-  localStorage.setItem("abr_current_user", email);
+async function login(email, password){
+  const { error } = await supabase.auth.signInWithPassword({
+    email: email.trim().toLowerCase(),
+    password
+  });
+  if(error) return {ok:false, error:"That email and password don't match any account."};
   return {ok:true};
 }
-function logout(){
-  localStorage.removeItem("abr_current_user");
+async function logout(){
+  await supabase.auth.signOut();
 }
-function requireLogin(redirectTo){
-  if(!getCurrentUser()){
+async function requireLogin(redirectTo){
+  const user = await getCurrentUser();
+  if(!user){
     location.href = "account.html?next=" + encodeURIComponent(redirectTo || location.pathname);
     return false;
   }
@@ -108,36 +113,38 @@ function requireLogin(redirectTo){
 }
 
 /* ---------- orders ----------
-   orders: [{ id, email, items:[{id,name,qty,price}], subtotal, shipping, total, address, date, status }] */
-function getOrders(){
-  try{ return JSON.parse(localStorage.getItem("abr_orders") || "[]"); }
-  catch(e){ return []; }
+   Stored in the `orders` table (see backend/schema.sql). Row-level
+   security means a logged-in shopper can only ever read or insert
+   their own rows — enforced by Postgres, not by this JS. */
+async function ordersForCurrentUser(){
+  const user = await getCurrentUser();
+  if(!user) return [];
+  const { data, error } = await supabase
+    .from("orders")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending:false });
+  if(error){ console.error(error); return []; }
+  return data;
 }
-function saveOrder(order){
-  const orders = getOrders();
-  orders.unshift(order);
-  localStorage.setItem("abr_orders", JSON.stringify(orders));
-}
-function ordersForCurrentUser(){
-  const email = getCurrentUserEmail();
-  if(!email) return [];
-  return getOrders().filter(o=>o.email===email);
-}
-function placeOrder(address){
+async function placeOrder(address){
   const lines = cartLinesWithProducts();
   if(!lines.length) return {ok:false, error:"Your cart is empty."};
+  const user = await getCurrentUser();
+  if(!user) return {ok:false, error:"Please log in before checking out."};
+
   const subtotal = cartSubtotal();
   const shipping = SHIPPING_FLAT;
   const order = {
     id: "AB" + Date.now().toString().slice(-8),
-    email: getCurrentUserEmail() || "guest",
+    user_id: user.id,
     items: lines.map(l=>({id:l.id, name:l.product.name, qty:l.qty, price:l.product.price})),
     subtotal, shipping, total: subtotal + shipping,
     address,
-    date: new Date().toISOString(),
     status: "Processing"
   };
-  saveOrder(order);
+  const { error } = await supabase.from("orders").insert(order);
+  if(error) return {ok:false, error:error.message};
   clearCart();
   return {ok:true, order};
 }
@@ -162,7 +169,8 @@ function productCardHTML(p){
   return `
   <article class="product-card">
     <div class="product-card__art">
-      <img src="${p.id}.jpg" alt="${p.name}" loading="lazy"/>
+      ${p.badge ? `<span class="product-card__badge">${p.badge}</span>` : ""}
+      ${resinArt(p.shape, p.a, p.b)}
     </div>
     <div class="product-card__body">
       <span class="product-card__cat">${collection ? collection.name : ""}</span>
@@ -178,7 +186,7 @@ function productCardHTML(p){
 function collectionCardHTML(c, big){
   return `
   <a class="collection-card" href="products.html?collection=${c.key}" style="${big?"aspect-ratio:16/10":""}">
-    
+    ${resinBlobBackground(c.a, c.b)}
     <div class="collection-card__label">
       <span class="eyebrow">Collection</span>
       <h3>${c.name}</h3>
@@ -187,14 +195,14 @@ function collectionCardHTML(c, big){
 }
 
 /* ---------- shared chrome ---------- */
-function renderHeader(active){
+async function renderHeader(active){
   const links = [
     {href:"index.html", label:"Home"},
     {href:"collections.html", label:"Collections"},
     {href:"products.html", label:"Products"},
   ];
   const navLinks = links.map(l=>`<a href="${l.href}" class="${active===l.label?'active':''}">${l.label}</a>`).join("");
-  const user = getCurrentUser();
+  const user = await getCurrentUser();
   document.querySelectorAll("[data-header]").forEach(el=>{
     el.innerHTML = `
     <div class="ticker">
@@ -210,7 +218,7 @@ function renderHeader(active){
             <circle cx="20" cy="20" r="18" fill="#c89b3c" opacity="0.85"/>
             <circle cx="16" cy="17" r="10" fill="#1f3b2c" opacity="0.85"/>
           </svg>
-          Set &amp; Cure
+          Amber &amp; Bloom
         </a>
         <nav class="nav__links" data-nav>${navLinks}</nav>
         <div class="nav__actions">
@@ -233,7 +241,7 @@ function renderFooter(){
       <div class="wrap">
         <div class="footer-grid">
           <div>
-            <div class="footer-logo">Set &amp; Cure</div>
+            <div class="footer-logo">Amber &amp; Bloom Resin Co.</div>
             <p style="max-width:34ch; font-size:.9rem; color:#b6ac9f;">Small-batch resin art and preserved-flower keepsakes, poured to order.</p>
           </div>
           <div>
