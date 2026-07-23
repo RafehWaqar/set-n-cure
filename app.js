@@ -169,8 +169,7 @@ function productCardHTML(p){
   return `
   <article class="product-card">
     <div class="product-card__art">
-      ${p.badge ? `<span class="product-card__badge">${p.badge}</span>` : ""}
-      ${resinArt(p.shape, p.a, p.b)}
+      <img src="${p.id}.jpg" alt="${p.name}" loading="lazy"/>
     </div>
     <div class="product-card__body">
       <span class="product-card__cat">${collection ? collection.name : ""}</span>
@@ -186,7 +185,6 @@ function productCardHTML(p){
 function collectionCardHTML(c, big){
   return `
   <a class="collection-card" href="products.html?collection=${c.key}" style="${big?"aspect-ratio:16/10":""}">
-    ${resinBlobBackground(c.a, c.b)}
     <div class="collection-card__label">
       <span class="eyebrow">Collection</span>
       <h3>${c.name}</h3>
