@@ -13,7 +13,7 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 if(typeof window.supabase === "undefined"){
   console.error("Supabase client library not found. Make sure the CDN <script> tag for @supabase/supabase-js comes BEFORE app.js in every HTML file.");
 }
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* ---------- cart ----------
    cart shape: [{ id, qty }] */
