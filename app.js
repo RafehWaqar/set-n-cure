@@ -8,6 +8,7 @@
    to expose in client-side code (that's what row-level security in
    schema.sql is for — it's what actually restricts access).
    ========================================================= */
+const ADMIN_EMAIL = "rafehgoku@gmail.com";
 const SUPABASE_URL = "https://oqakvkmgrccubejxrzwm.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYWt2a21ncmNjdWJlanhyendtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3OTc5NDQsImV4cCI6MjEwMDM3Mzk0NH0.lu7pDu_M_uxKJ0lb9OXZPjnlQGIhBizm8N5xV1OMSok";
 if(typeof window.supabase === "undefined"){
@@ -220,7 +221,7 @@ async function renderHeader(active){
         </a>
         <nav class="nav__links" data-nav>${navLinks}</nav>
         <div class="nav__actions">
-          <a class="account-link" href="account.html" aria-label="Account">${user ? "Hi, " + user.name.split(" ")[0] : "Log in"}</a>
+          <a class="account-link" href="${user && user.email === ADMIN_EMAIL ? 'admin.html' : 'account.html'}" aria-label="Account">${user ? "Hi, " + user.name.split(" ")[0] : "Log in"}</a>
           <a class="cart-btn" href="cart.html" aria-label="Cart">
             Cart <span class="cart-count" data-cart-count>0</span>
           </a>
