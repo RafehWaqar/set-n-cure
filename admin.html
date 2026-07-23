@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Orders</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div data-header></div>
+
+<main>
+  <section class="page-hero wrap">
+    <span class="eyebrow">Admin only</span>
+    <h1>Incoming orders</h1>
+    <p>Only visible to the account set as admin in your Supabase row-level security policy. Everyone else just sees their own orders, same as before.</p>
+  </section>
+
+  <section class="section wrap" data-admin-root>
+    <!-- filled by JS -->
+  </section>
+</main>
+
+<div data-footer></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="data.js"></script>
+<script src="app.js"></script>
+<script>
+(async function(){
+  renderHeader();
+  renderFooter();
+
+  const root = document.querySelector("[data-admin-root]");
+  const STATUSES = ["Processing", "Poured", "Shipped", "Delivered", "Cancelled"];
+
+  async function loadOrders(){
+    const { data, error } = await supabase
+      .from("orders")
+      .select("*")
+      .order("created_at", { ascending:false });
+
+    if(error){
+      root.innerHTML = `<div class="empty-cart">
+        <h3>Couldn't load orders</h3>
+        <p style="color:#5b524b;">${error.message}</p>
+        <p class="field-note">If this says something about permissions, your admin RLS policy in schema.sql either isn't set up yet, or doesn't match the UUID of the account you're logged in as.</p>
+      </div>`;
+      return;
+    }
+
+    if(!data.length){
+      root.innerHTML = `<div class="empty-cart"><h3>No orders yet</h3></div>`;
+      return;
+    }
+
+    root.innerHTML = data.map(o => `
+      <div class="order-card">
+        <div class="order-card__head">
+          <div>
+            <div class="order-card__id">Order ${o.id}</div>
+            <div class="order-card__meta">${o.customer_email} &middot; ${new Date(o.created_at).toLocaleString("en-GB")}</div>
+          </div>
+          <select data-status-select data-order-id="${o.id}">
+            ${STATUSES.map(s=>`<option value="${s}" ${s===o.status?'selected':''}>${s}</option>`).join("")}
+          </select>
+        </div>
+        ${o.items.map(i=>`
+          <div class="order-line">
+            <span class="order-line__name">${i.name} &times; ${i.qty}</span>
+            <span>${money(i.price * i.qty)}</span>
+          </div>`).join("")}
+        <div class="summary-row total"><span>Total</span><span>${money(o.total)}</span></div>
+        <p class="field-note" style="margin-top:10px;">
+          Ship to: ${o.address.name}, ${o.address.phone}<br>
+          ${o.address.street}, ${o.address.city} ${o.address.postal || ""}<br>
+          Payment: ${o.address.method}
+        </p>
+      </div>
+    `).join("");
+
+    document.querySelectorAll("[data-status-select]").forEach(select=>{
+      select.addEventListener("change", async ()=>{
+        const { error } = await supabase
+          .from("orders")
+          .update({ status: select.value })
+          .eq("id", select.dataset.orderId);
+        showToast(error ? "Couldn't update status: " + error.message : "Status updated");
+      });
+    });
+  }
+
+  const user = await getCurrentUser();
+  if(!user){
+    root.innerHTML = `<div class="empty-cart">
+      <h3>Log in required</h3>
+      <a href="account.html?next=admin.html" class="btn btn-primary">Log in</a>
+    </div>`;
+  } else {
+    await loadOrders();
+  }
+})();
+</script>
+</body>
+</html>
