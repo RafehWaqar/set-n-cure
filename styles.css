@@ -489,7 +489,7 @@ footer.site a:hover{color:var(--gold-light);}
 /* ---------- cart page ---------- */
 .cart-layout{
   display:grid; grid-template-columns:1.7fr 1fr; gap:40px; align-items:flex-start;
-  padding: 10px;
+  padding: 10px 10px 10px 0px;
 }
 
 .cart-page {
@@ -545,7 +545,7 @@ footer.site a:hover{color:var(--gold-light);}
 /* ---------- checkout ---------- */
 .checkout-layout{
   display:grid; grid-template-columns:1.3fr 1fr; gap:44px; align-items:flex-start;
-  padding: 10px;
+  padding: 10px 10px 10px 0px;
 }
 
 .checkout-page {
@@ -554,7 +554,7 @@ footer.site a:hover{color:var(--gold-light);}
 @media (max-width:900px){ .checkout-layout{grid-template-columns:1fr;} }
 
 .form-card{
-  background:var(--ivory); border-radius:var(--radius); padding:10px;
+  background:var(--ivory); border-radius:var(--radius); padding:10px 10px 10px 0px;
 }
 .form-card h3{font-size:1.1rem; margin-bottom:4px;}
 .form-card .form-sub{font-size:.86rem; color:#000; margin-bottom:20px;}
