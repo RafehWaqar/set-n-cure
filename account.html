@@ -11,7 +11,7 @@
 <div data-header></div>
 
 <main>
-  <section class="page-hero wrap">
+  <section class="page-hero wrap accounts-page">
     <span class="eyebrow">Your account</span>
     <h1 data-title>My account</h1>
     <p data-subtitle>Log in to track orders and check out faster next time.</p>
@@ -75,7 +75,6 @@
             <div class="field">
               <label for="signup-password">Password</label>
               <input id="signup-password" type="password" required minlength="4">
-              <p class="field-note">Demo account only &mdash; don't reuse a real password.</p>
             </div>
             <button type="submit" class="btn btn-primary" style="width:100%;">Create account</button>
           </form>
@@ -155,7 +154,7 @@
     if(!orders.length){
       list.innerHTML = `<div class="empty-cart" style="padding:40px 20px;">
         <h3>No orders yet</h3>
-        <p style="color:#5b524b; margin-bottom:20px;">Once you check out, your orders will show up here.</p>
+        <p style="color:#000; margin-bottom:20px;">Once you check out, your orders will show up here.</p>
         <a href="products.html" class="btn btn-primary">Shop products</a>
       </div>`;
     } else {

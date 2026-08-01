@@ -1,23 +1,23 @@
 /* =========================================================
    Amber & Bloom — shared front-end logic
-
-   Cart stays in localStorage (it's fine for pre-purchase, throwaway
-   state). Accounts and orders now use Supabase (Postgres + built-in
-   auth) — see backend/schema.sql for the table this depends on.
-   Fill in your own project's URL and anon key below; both are safe
-   to expose in client-side code (that's what row-level security in
-   schema.sql is for — it's what actually restricts access).
+   Cart, checkout and accounts are simulated entirely in the
+   browser using localStorage. There is no real server, so:
+     - orders are not actually shipped or charged
+     - "accounts" are not secure — do not reuse a real password
+   Swap this for real auth/payment endpoints before going live.
    ========================================================= */
-const ADMIN_EMAIL = "rafehgoku@gmail.com";
-const SUPABASE_URL = "https://oqakvkmgrccubejxrzwm.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYWt2a21ncmNjdWJlanhyendtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3OTc5NDQsImV4cCI6MjEwMDM3Mzk0NH0.lu7pDu_M_uxKJ0lb9OXZPjnlQGIhBizm8N5xV1OMSok";
-if(typeof window.supabase === "undefined"){
-  console.error("Supabase client library not found. Make sure the CDN <script> tag for @supabase/supabase-js comes BEFORE app.js in every HTML file.");
-}
-supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* ---------- cart ----------
    cart shape: [{ id, qty }] */
+
+
+
+const SUPABASE_URL = "https://oqakvkmgrccubejxrzwm.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYWt2a21ncmNjdWJlanhyendtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3OTc5NDQsImV4cCI6MjEwMDM3Mzk0NH0.lu7pDu_M_uxKJ0lb9OXZPjnlQGIhBizm8N5xV1OMSok";
+supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const ADMIN_EMAIL = "rafehgoku@gmail.com";
+
 function getCart(){
   try{ return JSON.parse(localStorage.getItem("abr_cart") || "[]"); }
   catch(e){ return []; }
@@ -75,14 +75,9 @@ function updateCartCount(){
    metadata at signup time rather than a separate table, since
    that's all we need beyond what auth.users already tracks. */
 async function getCurrentUser(){
-  try{
-    const { data: { user } } = await supabase.auth.getUser();
-    if(!user) return null;
-    return { id:user.id, email:user.email, name: user.user_metadata?.name || user.email };
-  }catch(e){
-    console.error("Supabase auth check failed:", e);
-    return null;
-  }
+  const { data: { user } } = await supabase.auth.getUser();
+  if(!user) return null;
+  return { id:user.id, email:user.email, name: user.user_metadata?.name || user.email };
 }
 async function signup(name, email, password){
   const { error } = await supabase.auth.signUp({
@@ -112,7 +107,7 @@ async function requireLogin(redirectTo){
   }
   return true;
 }
-
+ 
 /* ---------- orders ----------
    Stored in the `orders` table (see backend/schema.sql). Row-level
    security means a logged-in shopper can only ever read or insert
@@ -133,7 +128,7 @@ async function placeOrder(address){
   if(!lines.length) return {ok:false, error:"Your cart is empty."};
   const user = await getCurrentUser();
   if(!user) return {ok:false, error:"Please log in before checking out."};
-
+ 
   const subtotal = cartSubtotal();
   const shipping = SHIPPING_FLAT;
   const order = {
@@ -217,7 +212,7 @@ async function renderHeader(active){
             <circle cx="20" cy="20" r="18" fill="#c89b3c" opacity="0.85"/>
             <circle cx="16" cy="17" r="10" fill="#1f3b2c" opacity="0.85"/>
           </svg>
-          Amber &amp; Bloom
+          Set &amp; Cure
         </a>
         <nav class="nav__links" data-nav>${navLinks}</nav>
         <div class="nav__actions">
@@ -240,7 +235,7 @@ function renderFooter(){
       <div class="wrap">
         <div class="footer-grid">
           <div>
-            <div class="footer-logo">Amber &amp; Bloom Resin Co.</div>
+            <div class="footer-logo">Set &amp; Cure</div>
             <p style="max-width:34ch; font-size:.9rem; color:#b6ac9f;">Small-batch resin art and preserved-flower keepsakes, poured to order.</p>
           </div>
           <div>
@@ -270,7 +265,7 @@ function renderFooter(){
           </div>
         </div>
         <div class="footer-bottom">
-          <span>&copy; 2026 Amber &amp; Bloom Resin Co.</span>
+          <span>&copy; 2026 Set &amp; Cure Resin Co.</span>
           <span>Built with care, cured for 48 hours.</span>
         </div>
       </div>

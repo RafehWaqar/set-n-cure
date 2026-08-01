@@ -10,7 +10,7 @@
 
 <div data-header></div>
 
-<main>
+<main class="checkout-page">
   <section class="page-hero wrap">
     <span class="eyebrow">Step 2 of 2</span>
     <h1>Checkout</h1>
@@ -56,8 +56,6 @@
           <h3>Delivery details</h3>
           <p class="form-sub">Checking out as <strong>${user.email}</strong>.</p>
  
-          <div class="demo-note">No real payment is collected here yet — swap in a real payment gateway before taking real orders. Orders are saved for real to your account.</div>
- 
           <form data-checkout-form novalidate>
             <div class="field-row">
               <div class="field">
@@ -85,7 +83,7 @@
             </div>
  
             <h3 style="margin-top:26px;">Payment</h3>
-            <p class="form-sub">Simulated for this demo &mdash; no card details are stored anywhere.</p>
+            
             <div class="field">
               <label for="paymethod">Payment method</label>
               <select id="paymethod">

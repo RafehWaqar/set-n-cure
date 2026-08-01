@@ -10,7 +10,7 @@
 
 <div data-header></div>
 
-<main>
+<main class="cart-page">
   <section class="page-hero wrap">
     <span class="eyebrow">Step 1 of 2</span>
     <h1>Your cart</h1>
@@ -43,7 +43,7 @@
             <circle cx="50" cy="50" r="30" fill="none" stroke="#c89b3c" stroke-width="3" opacity="0.6"/>
           </svg>
           <h3>Your cart is empty</h3>
-          <p style="color:#5b524b; margin-bottom:22px;">Nothing poured in yet &mdash; go find a piece you love.</p>
+          <p style="color:#000; margin-bottom:22px;">Nothing poured in yet &mdash; go find a piece you love.</p>
           <a href="products.html" class="btn btn-primary">Shop products</a>
         </div>`;
       return;
@@ -70,7 +70,9 @@
       const c = COLLECTIONS.find(c=>c.key===l.product.cat);
       return `
       <div class="cart-line" data-line="${l.id}">
-        <div class="cart-line__art">${resinArt(l.product.shape, l.product.a, l.product.b)}</div>
+        <div class="cart-line__art">
+          <img src="${l.product.id}.jpg" alt="${l.product.name}" loading="lazy"/>
+        </div>
         <div>
           <span class="cart-line__cat">${c ? c.name : ""}</span>
           <div class="cart-line__name">${l.product.name}</div>
