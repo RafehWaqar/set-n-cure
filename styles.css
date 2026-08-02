@@ -204,11 +204,11 @@ header.site{
 .hero p.lede{
   font-size:1.08rem; max-width:46ch; color:#ffffff; margin:18px 0 30px;
 }
-.hero__actions{display:flex; gap:16px; flex-wrap:wrap;}
+.hero__actions{display:flex; gap:16px; flex-wrap: nowrap;}
 
 .btn{
   display:inline-flex; align-items:center; gap:8px;
-  padding:11px 15px; border-radius:999px; font-size:.93rem; font-weight:500;
+  padding:11px 17px; border-radius:999px; font-size:.92rem; font-weight:500;
   border:1px solid transparent; transition:.15s ease;
 }
 .btn-primary{background:var(--bottle); color:var(--ivory);}
@@ -221,7 +221,7 @@ header.site{
 
 @media (max-width:650px){ 
   .wrap{
-    padding:10px 12px;
+    padding:10px 0px;
   }
   .hero {
     padding-top: 10px;
