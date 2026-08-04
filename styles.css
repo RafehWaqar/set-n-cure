@@ -36,7 +36,13 @@ body{
   -webkit-font-smoothing:antialiased;
 }
 
-
+@supports (background-color: color(display-p3 1 0 0)){
+  @media (color-gamut: p3) {
+    body {
+      background:color(display-p3 0.3804 0.0549 0.1295);
+    }
+  }
+}
 
 h1,h2,h3,h4{
   font-family:'Fraunces', serif;
@@ -71,14 +77,15 @@ button{font-family:inherit; cursor:pointer;}
   background: url('coasters.jpg');
   background-size: cover;
   background-position: center;
+  background-repeat: no-repeat;
   margin-top: 20px;
 }
 
 .first-section {
-  width: 150%;
-  height: 110%;
+  width: 643.062px;
+  height: 377.641px;
   background: var(--ivory);
-  padding: 20px 32px;
+  padding: 20px 32px 5px 38px;
 }
 
 @media (max-width:1100px){ 
@@ -184,16 +191,22 @@ header.site{
   grid-template-columns:1.05fr .95fr; gap:50px;
   align-items:center;
 }
+
+@media (max-width: 740px) {
+  .hero {
+    padding: 50px 30px 40px;
+  }
+}
 @media (max-width:900px){ 
   .hero{
     grid-template-columns:1fr; 
     padding-top:30px;
   } 
   .first-section {
-    width: 100%;
+    width: 579px;
     height: 100%;
     margin-top: 10px;
-    padding: 20px 20px;
+    padding: 20px 20px 20px 30px;
   }
 }
 
@@ -204,12 +217,23 @@ header.site{
 .hero p.lede{
   font-size:1.08rem; max-width:46ch; color:#ffffff; margin:18px 0 30px;
 }
-.hero__actions{display:flex; gap:16px; flex-wrap: nowrap;}
+.hero__actions{
+  display:flex;
+   gap:16px; 
+   flex-wrap: nowrap;
+   padding: 0px 0px 0px 0px;
+}
+
+@media (max-width: 460px) {
+  .hero__actions {
+    gap: 16px;
+  }
+}
 
 .btn{
   display:inline-flex; align-items:center; gap:8px;
   padding:11px 17px; border-radius:999px; font-size:.92rem; font-weight:500;
-  border:1px solid transparent; transition:.15s ease;
+  border:1px solid transparent; transition:.15s ease; white-space: nowrap;
 }
 .btn-primary{background:var(--bottle); color:var(--ivory);}
 .btn-primary:hover{background:var(--bottle-light);}
@@ -225,14 +249,21 @@ header.site{
   }
   .hero {
     padding-top: 10px;
-    padding-left: 6%;
-    padding-right: 5%;
+    padding-left: 3%;
+    padding-right: 6%;
   }
   .first-section {
     margin-top: 10px;
     width: 100%;
     height: 100%;
-    padding: 16px 16px;
+    padding: 20px 20px;
+  }
+}
+
+@media (max-width:420px){
+  .btn {
+    font-size: 0.89rem;
+    padding: 11px 12px;
   }
 }
 
@@ -244,8 +275,10 @@ header.site{
 }
 .section-head h2{font-size:clamp(1.6rem,2.6vw,2.2rem);}
 .section-head p{color:#5b524b; max-width:48ch; margin:0;}
-.view-all{font-size:.9rem; font-weight:600; color:var(--rose); white-space:nowrap;}
-.view-all:hover{text-decoration:underline;}
+.view-all-collections{font-size:.9rem; font-weight:600; color:var(--rose); white-space:nowrap;}
+.view-all-products{font-size:.9rem; font-weight:600; color:var(--rose); white-space:nowrap; margin-left: 12px;}
+.view-all-products:hover{text-decoration:underline;}
+.view-all-collections:hover{text-decoration:underline;}
 
 /* ---------- collection grid ---------- */
 .grid-collections{
@@ -259,6 +292,8 @@ header.site{
   aspect-ratio:4/5; display:flex; align-items:flex-end;
   box-shadow:var(--shadow);
   background-image : url('coasters.jpg');
+  background-position: center;
+  background-size: cover;
 }
 .collection-card svg{
   position:absolute; inset:0; width:100%; height:100%;}
@@ -439,7 +474,7 @@ footer.site{
 }
 .footer-grid{
   display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:36px;
-  padding-bottom:36px; border-bottom:1px solid rgba(255,255,255,.12);
+  padding:0 0 36px 15px; border-bottom:1px solid rgba(255,255,255,.12);
 }
 @media (max-width:760px){ .footer-grid{grid-template-columns:1fr 1fr;} }
 footer.site h4{color:var(--gold-light); font-size:.85rem; letter-spacing:.06em; text-transform:uppercase; font-family:'Work Sans',sans-serif; font-weight:600;}
@@ -586,7 +621,10 @@ footer.site a:hover{color:var(--gold-light);}
 }
 .account-tabs button.active{background:var(--bottle); border-color:var(--bottle); color:var(--ivory);}
 
-.auth-panel{max-width:440px; margin:0 auto;}
+.auth-panel{
+  max-width:440px; margin:0 auto;
+  padding: 20px;
+}
 .form-error{
   background:#f8e3e1; color:#8a3b32; padding:10px 14px; border-radius:6px;
   font-size:.85rem; margin-bottom:16px; display:none;
