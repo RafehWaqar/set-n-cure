@@ -68,7 +68,7 @@ button{font-family:inherit; cursor:pointer;}
 
 .first { 
   max-width: 1fr;
-  background: url('Website PICTURES/coasters.jpg');
+  background: url('coasters.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -304,7 +304,7 @@ header.site{
   position:relative; border-radius:var(--radius); overflow:hidden;
   aspect-ratio:4/5; display:flex; align-items:flex-end;
   box-shadow:var(--shadow);
-  background-image : url('Website PICTURES/coasters.jpg');
+  background-image : url('coasters.jpg');
   background-position: center;
   background-size: cover;
 }
