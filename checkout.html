@@ -31,7 +31,6 @@
 (async function(){
   renderHeader();
   renderFooter();
- 
   const root = document.querySelector("[data-checkout-root]");
   const lines = cartLinesWithProducts();
  
@@ -52,7 +51,7 @@
  
     root.innerHTML = `
       <div class="checkout-layout">
-        <div class="form-card">
+        <div class="form-card checkout-form">
           <h3>Delivery details</h3>
           <p class="form-sub">Checking out as <strong>${user.email}</strong>.</p>
  
@@ -61,7 +60,7 @@
               <div class="field">
                 <label for="fname">Full name</label>
                 <input id="fname" required value="${user ? user.name : ''}">
-              </div>
+             </div>
               <div class="field">
                 <label for="phone">Phone number</label>
                 <input id="phone" required placeholder="03xx-xxxxxxx">

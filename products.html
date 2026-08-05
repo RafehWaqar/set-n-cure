@@ -19,7 +19,11 @@
   </section>
 
   <section class="section wrap products-cat">
-    <div class="filter-bar products-filter" data-filters></div>
+    <div class="filter-bar-wrap">
+      <button class="filter-arrow left" data-filter-prev aria-label="Scroll categories left">&larr;</button>
+      <div class="filter-bar products-filter" data-filters></div>
+      <button class="filter-arrow right" data-filter-next aria-label="Scroll categories right">&rarr;</button>
+    </div>
     <div class="grid-products" data-product-grid></div>
     <div class="empty-state" data-empty style="display:none;">
       <h3>Nothing here yet</h3>
@@ -55,14 +59,33 @@
         renderGrid();
       });
     });
+    updateFilterArrows();
   }
-
+ 
+  function updateFilterArrows(){
+    const track = document.querySelector("[data-filters]");
+    const prevBtn = document.querySelector("[data-filter-prev]");
+    const nextBtn = document.querySelector("[data-filter-next]");
+    const maxScroll = track.scrollWidth - track.clientWidth;
+    prevBtn.disabled = track.scrollLeft <= 4;
+    nextBtn.disabled = track.scrollLeft >= maxScroll - 4;
+  }
+ 
+  document.querySelector("[data-filter-prev]").addEventListener("click", ()=>{
+    document.querySelector("[data-filters]").scrollBy({ left: -220, behavior: "smooth" });
+  });
+  document.querySelector("[data-filter-next]").addEventListener("click", ()=>{
+    document.querySelector("[data-filters]").scrollBy({ left: 220, behavior: "smooth" });
+  });
+  document.querySelector("[data-filters]").addEventListener("scroll", updateFilterArrows);
+  window.addEventListener("resize", updateFilterArrows);
+ 
   function renderGrid(){
     const list = activeCat==="all" ? PRODUCTS : PRODUCTS.filter(p=>p.cat===activeCat);
     document.querySelector("[data-product-grid]").innerHTML = list.map(p=>productCardHTML(p)).join("");
     document.querySelector("[data-empty]").style.display = list.length ? "none" : "block";
   }
-
+ 
   renderFilters();
   renderGrid();
 </script>

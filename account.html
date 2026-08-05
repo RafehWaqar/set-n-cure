@@ -57,7 +57,7 @@
               <label for="login-password">Password</label>
               <input id="login-password" type="password" required>
             </div>
-            <button type="submit" class="btn btn-primary" style="width:100%;">Log in</button>
+            <button type="submit" class="btn btn-primary loginbtn" style="width:100%;">Log in</button>
           </form>
         </div>
  
@@ -76,7 +76,7 @@
               <label for="signup-password">Password</label>
               <input id="signup-password" type="password" required minlength="4">
             </div>
-            <button type="submit" class="btn btn-primary" style="width:100%;">Create account</button>
+            <button type="submit" class="btn btn-primary loginbtn" style="width:100%;">Create account</button>
           </form>
         </div>
       </div>`;
@@ -88,6 +88,7 @@
         const isLogin = btn.dataset.tab === "login";
         document.querySelector("[data-panel-login]").style.display = isLogin ? "block" : "none";
         document.querySelector("[data-panel-signup]").style.display = isLogin ? "none" : "block";
+        document.querySelectorAll(".loginbtn").forEach(b=>b.style.paddingLeft = isLogin ? "44.6%" : "38.1%");
       });
     });
  
@@ -154,7 +155,7 @@
     if(!orders.length){
       list.innerHTML = `<div class="empty-cart" style="padding:40px 20px;">
         <h3>No orders yet</h3>
-        <p style="color:#000; margin-bottom:20px;">Once you check out, your orders will show up here.</p>
+        <p style="color: var(--bottle); margin-bottom:20px;">Once you check out, your orders will show up here.</p>
         <a href="products.html" class="btn btn-primary">Shop products</a>
       </div>`;
     } else {

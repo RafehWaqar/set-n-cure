@@ -31,7 +31,7 @@
     root.innerHTML = `
       <div class="confirm-box">
         <h1>No recent order found</h1>
-        <p style="color:#5b524b;">Head back to the catalogue to start an order.</p>
+        <p>Head back to the catalogue to start an order.</p>
         <a href="products.html" class="btn btn-primary" style="margin-top:16px;">Shop products</a>
       </div>`;
   } else {
@@ -42,9 +42,8 @@
           <circle cx="50" cy="50" r="46" fill="#1f3b2c"/>
           <path d="M30 52 L44 66 L72 36" fill="none" stroke="#e8c77a" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <span class="eyebrow">Order confirmed</span>
         <h1>Thank you &mdash; it's in the queue.</h1>
-        <p style="color:#000;">Order <strong>${order.id}</strong> has been placed. We start pouring within 1&ndash;2 days and the whole piece is ready in 15&ndash;18 days.</p>
+        <p>Order <strong>${order.id}</strong> has been placed. We start pouring within 1&ndash;2 days and the whole piece is ready in 15&ndash;18 days.</p>
 
         <div class="form-card" style="text-align:left; margin-top:30px;">
           <h3>Order ${order.id}</h3>
