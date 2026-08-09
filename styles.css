@@ -68,7 +68,7 @@ button{font-family:inherit; cursor:pointer;}
 
 .first { 
   max-width: 1fr;
-  background: url('coasters.jpg');
+  background: url('Website PICTURES/coasters.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -293,18 +293,32 @@ header.site{
 .view-all-products:hover{text-decoration:underline;}
 .view-all-collections:hover{text-decoration:underline;}
 
-/* ---------- collection grid ---------- */
+/* ---------- collection grid (bento) ---------- */
 .grid-collections{
-  display:grid; grid-template-columns:repeat(3,1fr); gap:22px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-auto-rows:170px;
+  grid-auto-flow:dense;
+  gap:20px;
 }
-@media (max-width:900px){ .grid-collections{grid-template-columns:repeat(2,1fr);} }
+@media (max-width:900px){
+  .grid-collections{
+    grid-template-columns:repeat(2,1fr);
+    grid-auto-rows:190px;
+  }
+}
 
+/* bento sizing — pattern repeats every 8 tiles */
+.collection-card:nth-child(8n+1){ grid-column:span 2; grid-row:span 2; }
+.collection-card:nth-child(8n+4){ grid-row:span 2; }
+.collection-card:nth-child(8n+5){ grid-row:span 2; }
+.collection-card:nth-child(8n+6){ grid-column:span 2; }
 
 .collection-card{
-  position:relative; border-radius:var(--radius); overflow:hidden;
-  aspect-ratio:4/5; display:flex; align-items:flex-end;
+  position:relative; border-radius:25px; overflow:hidden;
+  height:100%; display:flex; align-items:flex-end;
   box-shadow:var(--shadow);
-  background-image : url('coasters.jpg');
+  background-image : url('Website PICTURES/coasters.jpg');
   background-position: center;
   background-size: cover;
 }
@@ -345,9 +359,37 @@ header.site{
 }
 
 .grid-products{
-  display:grid; grid-template-columns:repeat(4,1fr); gap:40px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  grid-auto-flow:dense;
+  gap:40px;
 }
 
+/* bento sizing — pattern repeats every 8 cards: two "feature" cards
+   run twice the width and carry a wider hero image */
+.product-card:nth-child(8n+1),
+.product-card:nth-child(8n+4){
+  grid-column:span 2;
+}
+.product-card:nth-child(8n+1) {
+  grid-row: span 2;
+}
+.product-card:nth-child(8n+1) .product-card__art {
+  height: 144%;
+}
+.product-card:nth-child(8n+4) .product-card__art{
+  aspect-ratio:2/1;
+}
+
+.product-card:nth-child(8n+1) .add-btn{
+  position: relative;
+  left: -10px;
+}
+
+.product-card:nth-child(8n+4) .add-btn{
+  position: relative;
+  left: -10px;
+}
 
 .feature-text {
   margin-left: 10px;
@@ -357,6 +399,11 @@ header.site{
    .grid-products{
       grid-template-columns:repeat(3,1fr);
     }
+   .product-card:nth-child(8n+1) .product-card__art,
+   .product-card:nth-child(8n+6) .product-card__art{
+      aspect-ratio:1/1;
+   }
+   .product-card:nth-child(8n+6){ grid-column:auto; }
 }
 @media (max-width:720px){ .grid-products{grid-template-columns:repeat(2,1fr);} }
 
@@ -426,6 +473,7 @@ header.site{
   border-radius:999px;
   font-size:.99rem;
   font-weight:500;
+  transition: 0.3s ease;
 }
 .add-btn:hover{background:var(--bottle); color:var(--ivory);}
 .add-btn[disabled]{opacity:.45; cursor:not-allowed;}

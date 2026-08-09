@@ -19,7 +19,7 @@
   </section>
 
   <section class="section wrap">
-    <div class="grid-collections" data-collections-grid style="grid-template-columns:repeat(2,1fr);"></div>
+    <div class="grid-collections" data-collections-grid></div>
   </section>
 </main>
 
@@ -33,7 +33,7 @@
 
   document.querySelector("[data-collections-grid]").innerHTML =
     COLLECTIONS.map(c=>`
-      <a class="collection-card" href="products.html?collection=${c.key}" style="aspect-ratio:16/11;">
+      <a class="collection-card" href="products.html?collection=${c.key}">
         <div class="collection-card__label">
           <span class="eyebrow">Collection</span>
           <h3>${c.name}</h3>
