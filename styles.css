@@ -68,7 +68,7 @@ button{font-family:inherit; cursor:pointer;}
 
 .first { 
   max-width: 1fr;
-  background: url('coasters.jpg');
+  background: url('Website PICTURES/coasters.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -311,14 +311,13 @@ header.site{
 /* bento sizing — pattern repeats every 8 tiles */
 .collection-card:nth-child(8n+1){ grid-column:span 2; grid-row:span 2; }
 .collection-card:nth-child(8n+4){ grid-row:span 2; }
-.collection-card:nth-child(8n+5){ grid-row:span 2; }
 .collection-card:nth-child(8n+6){ grid-column:span 2; }
 
 .collection-card{
-  position:relative; border-radius:25px; overflow:hidden;
+  position:relative; border-radius:var(--radius); overflow:hidden;
   height:100%; display:flex; align-items:flex-end;
   box-shadow:var(--shadow);
-  background-image : url('coasters.jpg');
+  background-image : url('Website PICTURES/coasters.jpg');
   background-position: center;
   background-size: cover;
 }
@@ -365,31 +364,22 @@ header.site{
   gap:40px;
 }
 
-/* bento sizing — pattern repeats every 8 cards: two "feature" cards
-   run twice the width and carry a wider hero image */
-.product-card:nth-child(8n+1),
+/* bento sizing — pattern repeats every 8 cards: the first card becomes
+   a big 2x2 hero, the sixth stays a wide 2-column feature */
+.product-card:nth-child(8n+1){
+  grid-column:span 2;
+  grid-row:span 2;
+}
 .product-card:nth-child(8n+4){
   grid-column:span 2;
 }
-.product-card:nth-child(8n+1) {
-  grid-row: span 2;
-}
-.product-card:nth-child(8n+1) .product-card__art {
-  height: 144%;
+.product-card:nth-child(8n+1) .product-card__art{
+  height: 114%;
 }
 .product-card:nth-child(8n+4) .product-card__art{
-  aspect-ratio:2/1;
+  aspect-ratio:2/1.13;
 }
 
-.product-card:nth-child(8n+1) .add-btn{
-  position: relative;
-  left: -10px;
-}
-
-.product-card:nth-child(8n+4) .add-btn{
-  position: relative;
-  left: -10px;
-}
 
 .feature-text {
   margin-left: 10px;
@@ -399,7 +389,11 @@ header.site{
    .grid-products{
       grid-template-columns:repeat(3,1fr);
     }
-   .product-card:nth-child(8n+1) .product-card__art,
+   .product-card:nth-child(8n+1){ grid-row:span 1; }
+   .product-card:nth-child(8n+1) .product-card__art{
+      aspect-ratio:1/1;
+      flex:none;
+   }
    .product-card:nth-child(8n+6) .product-card__art{
       aspect-ratio:1/1;
    }
@@ -473,11 +467,77 @@ header.site{
   border-radius:999px;
   font-size:.99rem;
   font-weight:500;
-  transition: 0.3s ease;
 }
 .add-btn:hover{background:var(--bottle); color:var(--ivory);}
 .add-btn[disabled]{opacity:.45; cursor:not-allowed;}
 .add-btn[disabled]:hover{background:none; color:var(--bottle);}
+
+/* ---------- product quick-view modal ---------- */
+.product-card{ cursor:pointer; }
+
+.modal-overlay{
+  position:fixed; inset:0; z-index:999;
+  background:rgba(20,10,10,.45);
+  -webkit-backdrop-filter:blur(8px);
+  backdrop-filter:blur(8px);
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+  opacity:0; pointer-events:none;
+  transition:opacity .25s ease;
+}
+.modal-overlay.active{ opacity:1; pointer-events:auto; }
+
+.product-modal{
+  background:var(--ivory);
+  width:100%; max-width:840px; max-height:88vh;
+  overflow:auto;
+  border-radius:var(--radius);
+  box-shadow:0 30px 70px rgba(0,0,0,.35);
+  display:grid; grid-template-columns:1fr 1fr;
+  position:relative;
+  transform:translateY(24px) scale(.97);
+  transition:transform .25s ease;
+}
+.modal-overlay.active .product-modal{ transform:translateY(0) scale(1); }
+@media (max-width:720px){
+  .product-modal{ grid-template-columns:1fr; max-height:92vh; }
+}
+
+.modal-close{
+  position:absolute; top:14px; right:14px; z-index:2;
+  width:36px; height:36px; border-radius:50%;
+  border:1px solid rgba(255,255,255,.5);
+  background:rgba(0,0,0,.25); color:#fff;
+  font-size:1.3rem; line-height:1; cursor:pointer;
+}
+.modal-close:hover{ background:rgba(0,0,0,.45); }
+
+.product-modal__art{
+  aspect-ratio:1/1; overflow:hidden; background:var(--paper);
+}
+@media (max-width:720px){ .product-modal__art{ aspect-ratio:4/3; } }
+.product-modal__art img{ width:100%; height:100%; object-fit:cover; object-position:center; }
+
+.product-modal__body{
+  padding:36px 34px; display:flex; flex-direction:column; gap:10px;
+}
+.product-modal__cat{ font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; color:var(--rose); font-weight:600; }
+.product-modal__name{ font-family:'Fraunces',serif; font-size:1.6rem; color:var(--bottle); margin:0; }
+.product-modal__price{ font-size:1.2rem; font-weight:600; color:var(--bottle); margin:0; }
+.product-modal__desc{ font-size:.92rem; color:var(--bottle); opacity:.85; line-height:1.6; margin:0; }
+
+.qty-counter{
+  display:flex; align-items:center; gap:16px; margin-top:6px;
+}
+.qty-btn{
+  width:38px; height:38px; border-radius:50%;
+  border:1px solid var(--line); background:none; color:var(--bottle);
+  font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+.qty-btn:hover{ border-color:var(--gold); color:var(--gold-light); }
+.qty-value{ min-width:20px; text-align:center; font-weight:600; color:var(--bottle); }
+
+.modal-add-btn{ margin-top:16px; width:100%; }
 
 /* ---------- filter bar ---------- */
 .filter-bar{
@@ -490,6 +550,32 @@ header.site{
 }
 .chip.active, .chip.active:hover {border-bottom:2px solid var(--gold)}
 .chip:hover{border-bottom: 2px solid var(--bottle);}
+
+/* ---------- pagination ---------- */
+.pagination{
+  display:flex; align-items:center; justify-content:center;
+  gap:8px; margin-top:40px; flex-wrap:wrap;
+}
+.pagination__btn{
+  min-width:38px; height:38px; padding:0 10px;
+  background:transparent; color:var(--bottle);
+  border:1px solid var(--line); border-radius:var(--radius);
+  font-family:'Work Sans', sans-serif; font-size:.85rem; font-weight:500;
+  cursor:pointer; transition:border-color .15s ease, color .15s ease;
+}
+.pagination__btn:hover:not([disabled]):not(.active){
+  border-color:var(--gold); color:var(--gold-light);
+}
+.pagination__btn.active{
+  background:var(--gold); border-color:var(--gold); color:var(--ink);
+  font-weight:600; cursor:default;
+}
+.pagination__btn[disabled]{
+  opacity:.4; cursor:not-allowed;
+}
+.pagination__ellipsis{
+  color:var(--bottle); opacity:.6; padding:0 4px; font-size:.85rem;
+}
 
 /* ---------- process ---------- */
 .process{

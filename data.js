@@ -9,6 +9,7 @@ const COLLECTIONS = [
   { key:"coasters",    name:"Coasters & Trays", desc:"Tableware that doubles as a conversation piece.",                                          shape:"circle", a:"#e8c77a", b:"#2f5641" },
   { key:"religious",   name:"Religious Art", desc:"Ayat and calligraphy pieces poured with care and gold leaf detail.",                          shape:"arch",   a:"#1f3b2c", b:"#e8c77a" },
   { key:"candles",     name:"Soy Candles", desc:"Hand-poured soy candles to pair alongside your gift.",                                          shape:"jar",    a:"#c97b84", b:"#c89b3c" },
+  { key:"candles",     name:"Soy Candles", desc:"Hand-poured soy candles to pair alongside your gift.",                                          shape:"jar",    a:"#c97b84", b:"#c89b3c" },
 ];
 
 const PRODUCTS = [

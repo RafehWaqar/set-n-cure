@@ -20,6 +20,7 @@
 
   <section class="section wrap">
     <div class="grid-collections" data-collections-grid></div>
+    <div class="pagination" data-pagination></div>
   </section>
 </main>
 
@@ -31,16 +32,68 @@
   renderHeader("Collections");
   renderFooter();
 
-  document.querySelector("[data-collections-grid]").innerHTML =
-    COLLECTIONS.map(c=>`
-      <a class="collection-card" href="products.html?collection=${c.key}">
-        <div class="collection-card__label">
-          <span class="eyebrow">Collection</span>
-          <h3>${c.name}</h3>
-          <p style="color:rgba(255,255,255,.85); font-size:.88rem; margin:6px 0 0;">${c.desc}</p>
-        </div>
-      </a>
-    `).join("");
+  const PAGE_SIZE = 8;
+  const params = new URLSearchParams(location.search);
+  let currentPage = parseInt(params.get("page"), 10) || 1;
+
+  function goToPage(page){
+    currentPage = page;
+    const url = new URL(location);
+    if(currentPage===1) url.searchParams.delete("page");
+    else url.searchParams.set("page", currentPage);
+    history.replaceState({}, "", url);
+    renderGrid();
+    document.querySelector(".page-hero").scrollIntoView({ behavior:"smooth", block:"start" });
+  }
+
+  function renderPagination(totalItems){
+    const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+    const wrap = document.querySelector("[data-pagination]");
+
+    if(totalPages <= 1){ wrap.innerHTML = ""; return; }
+
+    let html = `<button class="pagination__btn" data-page="${currentPage-1}" ${currentPage===1?'disabled':''} aria-label="Previous page">&larr;</button>`;
+
+    const pages = new Set([1, totalPages, currentPage, currentPage-1, currentPage+1]);
+    let prevShown = 0;
+    for(let p=1; p<=totalPages; p++){
+      if(!pages.has(p)) continue;
+      if(prevShown && p - prevShown > 1) html += `<span class="pagination__ellipsis">&hellip;</span>`;
+      html += `<button class="pagination__btn ${p===currentPage?'active':''}" data-page="${p}">${p}</button>`;
+      prevShown = p;
+    }
+
+    html += `<button class="pagination__btn" data-page="${currentPage+1}" ${currentPage===totalPages?'disabled':''} aria-label="Next page">&rarr;</button>`;
+
+    wrap.innerHTML = html;
+    wrap.querySelectorAll(".pagination__btn:not([disabled]):not(.active)").forEach(btn=>{
+      btn.addEventListener("click", ()=> goToPage(parseInt(btn.dataset.page, 10)));
+    });
+  }
+
+  function renderGrid(){
+    const totalPages = Math.max(1, Math.ceil(COLLECTIONS.length / PAGE_SIZE));
+    if(currentPage > totalPages) currentPage = totalPages;
+    if(currentPage < 1) currentPage = 1;
+
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageItems = COLLECTIONS.slice(start, start + PAGE_SIZE);
+
+    document.querySelector("[data-collections-grid]").innerHTML =
+      pageItems.map(c=>`
+        <a class="collection-card" href="products.html?collection=${c.key}">
+          <div class="collection-card__label">
+            <span class="eyebrow">Collection</span>
+            <h3>${c.name}</h3>
+            <p style="color:rgba(255,255,255,.85); font-size:.88rem; margin:6px 0 0;">${c.desc}</p>
+          </div>
+        </a>
+      `).join("");
+
+    renderPagination(COLLECTIONS.length);
+  }
+
+  renderGrid();
 </script>
 </body>
 </html>

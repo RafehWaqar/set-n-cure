@@ -115,6 +115,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
+<script src="product-modal.js"></script>
 <script>
   renderHeader("Home");
   renderFooter();
@@ -122,8 +123,10 @@
   document.querySelector("[data-home-collections]").innerHTML =
     COLLECTIONS.slice(0,6).map(c=>collectionCardHTML(c)).join("");
 
+  const homeProducts = PRODUCTS.slice(0,8);
   document.querySelector("[data-home-products]").innerHTML =
-    PRODUCTS.slice(0,8).map(p=>productCardHTML(p)).join("");
+    homeProducts.map(p=>productCardHTML(p)).join("");
+  wireProductCardClicks(document.querySelector("[data-home-products]"), () => homeProducts);
 </script>
 </body>
 </html>

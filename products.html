@@ -25,6 +25,7 @@
       <button class="filter-arrow right" data-filter-next aria-label="Scroll categories right">&rarr;</button>
     </div>
     <div class="grid-products" data-product-grid></div>
+    <div class="pagination" data-pagination></div>
     <div class="empty-state" data-empty style="display:none;">
       <h3>Nothing here yet</h3>
       <p>Try a different collection, or view the full catalogue.</p>
@@ -36,12 +37,18 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
+<script src="product-modal.js"></script>
 <script>
   renderHeader("Products");
   renderFooter();
 
   const params = new URLSearchParams(location.search);
   let activeCat = params.get("collection") || "all";
+  const PAGE_SIZE = 8;
+  let currentPage = parseInt(params.get("page"), 10) || 1;
+  let currentPageItems = [];
+  const productGridEl = document.querySelector("[data-product-grid]");
+  wireProductCardClicks(productGridEl, () => currentPageItems);
 
   function renderFilters(){
     const chips = [{key:"all", name:"All"}, ...COLLECTIONS];
@@ -51,9 +58,11 @@
     document.querySelectorAll(".chip").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         activeCat = btn.dataset.cat;
+        currentPage = 1;
         const url = new URL(location);
         if(activeCat==="all") url.searchParams.delete("collection");
         else url.searchParams.set("collection", activeCat);
+        url.searchParams.delete("page");
         history.replaceState({}, "", url);
         renderFilters();
         renderGrid();
@@ -79,11 +88,55 @@
   });
   document.querySelector("[data-filters]").addEventListener("scroll", updateFilterArrows);
   window.addEventListener("resize", updateFilterArrows);
+
+  function goToPage(page){
+    currentPage = page;
+    const url = new URL(location);
+    if(currentPage===1) url.searchParams.delete("page");
+    else url.searchParams.set("page", currentPage);
+    history.replaceState({}, "", url);
+    renderGrid();
+    document.querySelector(".products-cat").scrollIntoView({ behavior:"smooth", block:"start" });
+  }
+
+  function renderPagination(totalItems){
+    const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+    const wrap = document.querySelector("[data-pagination]");
+
+    if(totalPages <= 1){ wrap.innerHTML = ""; return; }
+
+    let html = `<button class="pagination__btn" data-page="${currentPage-1}" ${currentPage===1?'disabled':''} aria-label="Previous page">&larr;</button>`;
+
+    const pages = new Set([1, totalPages, currentPage, currentPage-1, currentPage+1]);
+    let prevShown = 0;
+    for(let p=1; p<=totalPages; p++){
+      if(!pages.has(p)) continue;
+      if(prevShown && p - prevShown > 1) html += `<span class="pagination__ellipsis">&hellip;</span>`;
+      html += `<button class="pagination__btn ${p===currentPage?'active':''}" data-page="${p}">${p}</button>`;
+      prevShown = p;
+    }
+
+    html += `<button class="pagination__btn" data-page="${currentPage+1}" ${currentPage===totalPages?'disabled':''} aria-label="Next page">&rarr;</button>`;
+
+    wrap.innerHTML = html;
+    wrap.querySelectorAll(".pagination__btn:not([disabled]):not(.active)").forEach(btn=>{
+      btn.addEventListener("click", ()=> goToPage(parseInt(btn.dataset.page, 10)));
+    });
+  }
  
   function renderGrid(){
     const list = activeCat==="all" ? PRODUCTS : PRODUCTS.filter(p=>p.cat===activeCat);
-    document.querySelector("[data-product-grid]").innerHTML = list.map(p=>productCardHTML(p)).join("");
+    const totalPages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+    if(currentPage > totalPages) currentPage = totalPages;
+    if(currentPage < 1) currentPage = 1;
+
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const pageItems = list.slice(start, start + PAGE_SIZE);
+    currentPageItems = pageItems;
+
+    document.querySelector("[data-product-grid]").innerHTML = pageItems.map(p=>productCardHTML(p)).join("");
     document.querySelector("[data-empty]").style.display = list.length ? "none" : "block";
+    renderPagination(list.length);
   }
  
   renderFilters();
