@@ -506,7 +506,7 @@ header.site{
   background:var(--ivory);
   width:100%; max-width:840px; max-height:88vh;
   overflow:auto;
-  border-radius:var(--radius);
+  border-radius: 25px;
   box-shadow:0 30px 70px rgba(0,0,0,.35);
   display:grid; grid-template-columns:1fr 1fr;
   position:relative;
