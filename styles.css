@@ -311,10 +311,11 @@ header.site{
 /* bento sizing — pattern repeats every 8 tiles */
 .collection-card:nth-child(8n+1){ grid-column:span 2; grid-row:span 2; }
 .collection-card:nth-child(8n+4){ grid-row:span 2; }
+.collection-card:nth-child(8n+5){ grid-row:span 2; }
 .collection-card:nth-child(8n+6){ grid-column:span 2; }
 
 .collection-card{
-  position:relative; border-radius:var(--radius); overflow:hidden;
+  position:relative; border-radius:25px; overflow:hidden;
   height:100%; display:flex; align-items:flex-end;
   box-shadow:var(--shadow);
   background-image : url('coasters.jpg');
