@@ -105,7 +105,7 @@
     activeProduct = product;
     qty = 1;
 
-    document.querySelector("[data-modal-img]").src = "Website PICTURES/" + pick(product, ["id", "image", "thumbnail", "photo"], "") + ".jpg";
+    document.querySelector("[data-modal-img]").src = pick(product, ["id", "image", "thumbnail", "photo"], "") + ".jpg";
     document.querySelector("[data-modal-img]").alt = pick(product, ["name", "title"], "Product");
     document.querySelector("[data-modal-cat]").textContent = catLabel(product);
     document.querySelector("[data-modal-name]").textContent = pick(product, ["name", "title"], "");
