@@ -159,13 +159,14 @@ function showToast(msg){
   toast._t = setTimeout(()=>toast.classList.remove("show"), 2200);
 }
 
+
 /* ---------- product card ---------- */
 function productCardHTML(p){
   const collection = COLLECTIONS.find(c=>c.key===p.cat);
   return `
   <article class="product-card">
     <div class="product-card__art">
-      <img src="Website PICTURES/${p.id}.jpg" alt="${p.name}" loading="lazy"/>
+      <img src="${window.innerWidth <= 720 ? "Square" : "Website"} PICTURES/${p.id}.jpg" alt="${p.name}" loading="lazy" class="prod-img"/>
     </div>
     <div class="product-card__body">
       <span class="product-card__cat">${collection ? collection.name : ""}</span>
@@ -187,6 +188,40 @@ function collectionCardHTML(c, big){
     </div>
   </a>`;
 }
+
+function throttle(func, limit) {
+  let inThrottle = false;
+  return function() {
+    // If we recently ran the code, block it from running again
+    if (!inThrottle) {
+      func();
+      inThrottle = true;
+      // Unblock it after the time limit passes
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+}
+
+// The heavy action you want to run
+function updateAnimations() {
+  console.log("Window resized, updating animations...");
+  if (window.innerWidth <= 720) {
+    document.querySelectorAll(".prod-img").forEach(img => {
+      src1 = img.getAttribute("src");
+      img.src = src1.replace("Website", "Square");
+    })
+    console.log("Switched to square images for small screens");
+  }
+  else {
+    document.querySelectorAll(".prod-img").forEach(img => {
+      src1 = img.getAttribute("src");
+      img.src = src1.replace("Square", "Website");
+    })
+  }
+}
+
+// Run updateAnimations at most once every 200 milliseconds during resize
+window.addEventListener("resize", throttle(updateAnimations, 200));
 
 /* ---------- shared chrome ---------- */
 async function renderHeader(active){
