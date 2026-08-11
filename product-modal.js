@@ -121,7 +121,7 @@
   async function findGalleryImages(product){
     const found = [];
     for(let n = 1; n <= GALLERY_MAX; n++){
-      const url = `${product.id}${n}.jpg`;
+      const url = `Website PICTURES/${product.id}${n}.jpg`;
       const ok = await imageExists(url);
       if(!ok) break;
       found.push(url);
@@ -165,7 +165,7 @@
 
     // show the card's existing image immediately, then swap in the
     // gallery once probing finishes so the modal never looks empty
-    const fallbackImg = `${product.id}.jpg`;
+    const fallbackImg = `Website PICTURES/${product.id}.jpg`;
     galleryImages = [fallbackImg];
     galleryIndex = 0;
     document.querySelector("[data-modal-img]").src = fallbackImg;

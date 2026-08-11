@@ -71,7 +71,7 @@ button{font-family:inherit; cursor:pointer;}
 
 .first { 
   max-width: 1fr;
-  background: url('coasters.jpg');
+  background: url('Website PICTURES/coasters.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -321,7 +321,7 @@ header.site{
   position:relative; border-radius: 25px; overflow:hidden;
   height:100%; display:flex; align-items:flex-end;
   box-shadow:var(--shadow);
-  background-image : url('coasters.jpg');
+  background-image : url('Website PICTURES/coasters.jpg');
   background-position: center;
   background-size: cover;
 }
@@ -390,7 +390,7 @@ header.site{
   grid-column:span 2;
 }
 .product-card:nth-child(8n+1) .product-card__art{
-  height: 114%;
+  height: 144%;
 }
 .product-card:nth-child(8n+4) .product-card__art{
   aspect-ratio:2/1.13;
