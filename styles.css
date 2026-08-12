@@ -194,6 +194,11 @@ header.site{
   .menu-toggle{display:block;}
 }
 
+
+.btn-guest {
+  background-color: var(--ivory);
+}
+
 /* ---------- resin pour signature blob ---------- */
 .pour-divider{display:block; width:100%; height:auto; margin:-1px 0;}
 
@@ -759,7 +764,7 @@ footer.site a:hover{color:var(--gold-light);}
   text-align:center; padding:80px 20px;
 }
 
-.empty-cart p{color: var(bottle);}
+.empty-cart p{color: var(--bottle);}
 .empty-cart svg{width:90px; height:90px; margin:0 auto 20px;}
 
 /* ---------- checkout ---------- */
@@ -783,6 +788,9 @@ footer.site a:hover{color:var(--gold-light);}
 
 .form-card h3{font-size:1.1rem; margin-bottom:4px;}
 .form-card .form-sub{font-size:.86rem; color:var(--bottle); margin-bottom:20px;}
+.auth-panel .form-sub, .empty-cart p {
+  color: var(--bottle);
+}
 .field-row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
 @media (max-width:520px){ .field-row{grid-template-columns:1fr;} }
 .field{margin-bottom:16px;}

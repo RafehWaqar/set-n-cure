@@ -36,10 +36,8 @@
   const nextUrl = params.get("next") || "index.html";
   const root = document.querySelector("[data-account-root]");
  
-  function renderLoggedOut(){
-    document.querySelector("[data-title]").textContent = "Log in or create an account";
-    document.querySelector("[data-subtitle]").textContent = "Track orders and skip re-typing your address next time.";
-    root.innerHTML = `
+  function authTabsHTML(showGuestOption){
+    return `
       <div class="auth-panel">
         <div class="account-tabs">
           <button class="active" data-tab="login">Log in</button>
@@ -79,56 +77,92 @@
             <button type="submit" class="btn btn-primary loginbtn" style="width:100%;">Create account</button>
           </form>
         </div>
-      </div>`;
  
-    document.querySelectorAll(".account-tabs button").forEach(btn=>{
+        ${showGuestOption ? `
+        <div class="demo-note" style="margin-top:20px; text-align:center;">
+          Just want to check out without an account?
+          <button class="btn btn-ghost" data-guest-btn style="margin-top:10px; width:100%;">Continue as guest</button>
+          <p class="field-note">Guest orders are tied to this browser only — if you clear your cookies or switch devices, you won't be able to see them again. Create an account instead if you want your order history to stick around.</p>
+        </div>` : ""}
+      </div>`;
+  }
+ 
+  function wireAuthTabs(container, onSuccess){
+    container.querySelectorAll(".account-tabs button").forEach(btn=>{
       btn.addEventListener("click", ()=>{
-        document.querySelectorAll(".account-tabs button").forEach(b=>b.classList.remove("active"));
+        container.querySelectorAll(".account-tabs button").forEach(b=>b.classList.remove("active"));
         btn.classList.add("active");
         const isLogin = btn.dataset.tab === "login";
-        document.querySelector("[data-panel-login]").style.display = isLogin ? "block" : "none";
-        document.querySelector("[data-panel-signup]").style.display = isLogin ? "none" : "block";
-        document.querySelectorAll(".loginbtn").forEach(b=>b.style.paddingLeft = isLogin ? "44.6%" : "38.1%");
+        container.querySelector("[data-panel-login]").style.display = isLogin ? "block" : "none";
+        container.querySelector("[data-panel-signup]").style.display = isLogin ? "none" : "block";
+        container.querySelectorAll(".loginbtn").forEach(b=>b.style.paddingLeft = isLogin ? "44.6%" : "38.1%");
       });
     });
  
-    document.querySelector("[data-login-form]").addEventListener("submit", async (e)=>{
+    container.querySelector("[data-login-form]").addEventListener("submit", async (e)=>{
       e.preventDefault();
-      const email = document.getElementById("login-email").value;
-      const password = document.getElementById("login-password").value;
+      const email = container.querySelector("#login-email").value;
+      const password = container.querySelector("#login-password").value;
+      const wasGuest = await getCurrentUser();
+      const guestId = wasGuest && wasGuest.isGuest ? wasGuest.id : null;
       const res = await login(email, password);
-      const err = document.querySelector("[data-login-error]");
+      const err = container.querySelector("[data-login-error]");
       if(res.ok){
-        showToast("Welcome back!");
+        if(guestId) await claimGuestOrders(guestId);
+        showToast(guestId ? "Welcome back! Your guest orders were added to your account." : "Welcome back!");
         await renderHeader();
-        location.href = nextUrl;
+        onSuccess();
       } else {
         err.textContent = res.error;
         err.classList.add("show");
       }
     });
  
-    document.querySelector("[data-signup-form]").addEventListener("submit", async (e)=>{
+    container.querySelector("[data-signup-form]").addEventListener("submit", async (e)=>{
       e.preventDefault();
-      const name = document.getElementById("signup-name").value.trim();
-      const email = document.getElementById("signup-email").value;
-      const password = document.getElementById("signup-password").value;
+      const name = container.querySelector("#signup-name").value.trim();
+      const email = container.querySelector("#signup-email").value;
+      const password = container.querySelector("#signup-password").value;
+      const wasGuest = await getCurrentUser();
+      const guestId = wasGuest && wasGuest.isGuest ? wasGuest.id : null;
       const res = await signup(name, email, password);
-      const err = document.querySelector("[data-signup-error]");
+      const err = container.querySelector("[data-signup-error]");
       if(res.ok){
+        if(guestId) await claimGuestOrders(guestId);
         showToast("Account created — check your email to confirm it, if confirmation is enabled on your project.");
         await renderHeader();
-        location.href = nextUrl;
+        onSuccess();
       } else {
         err.textContent = res.error;
         err.classList.add("show");
       }
     });
+ 
+    const guestBtn = container.querySelector("[data-guest-btn]");
+    if(guestBtn){
+      guestBtn.addEventListener("click", async ()=>{
+        const res = await continueAsGuest();
+        if(res.ok){
+          showToast("Continuing as guest");
+          await renderHeader();
+          onSuccess();
+        } else {
+          showToast(res.error);
+        }
+      });
+    }
+  }
+ 
+  function renderLoggedOut(){
+    document.querySelector("[data-title]").textContent = "Log in or create an account";
+    document.querySelector("[data-subtitle]").textContent = "Track orders and skip re-typing your address next time.";
+    root.innerHTML = authTabsHTML(false);
+    wireAuthTabs(root, ()=>{ location.href = nextUrl; });
   }
  
   async function renderLoggedIn(user){
-    document.querySelector("[data-title]").textContent = "Welcome back, " + user.name.split(" ")[0];
-    document.querySelector("[data-subtitle]").textContent = user.email;
+    document.querySelector("[data-title]").textContent = user.isGuest ? "You're checking out as a guest" : "Welcome back, " + user.name.split(" ")[0];
+    document.querySelector("[data-subtitle]").textContent = user.isGuest ? "This order history only lives in this browser." : user.email;
  
     const orders = await ordersForCurrentUser();
  
@@ -136,14 +170,36 @@
       <div class="account-dashboard">
         <div class="account-side">
           <h3>${user.name}</h3>
-          <p>${user.email}</p>
+          ${user.isGuest ? `<p class="field-note" style="margin-bottom:16px;">Guest session &mdash; not saved permanently.</p>` : `<p>${user.email}</p>`}
+          ${user.isGuest ? `<button class="btn btn-ghost" data-show-auth style="margin-bottom:10px; width:100%;">Sign up / Log in</button>` : ""}
           <button class="btn btn-ghost" data-logout>Log out</button>
         </div>
         <div>
+          ${user.isGuest ? `
+          <div class="auth-panel" data-guest-auth-wrap style="margin-bottom:26px; display:none;">
+            <h3>Keep this order history for good</h3>
+            <p class="form-sub">Sign up, or log into an account you already have &mdash; either way, this order history comes with you.</p>
+            <div data-guest-auth-slot></div>
+          </div>` : ""}
           <h2 style="font-size:1.3rem; margin-bottom:16px;">Order history</h2>
           <div data-orders-list></div>
         </div>
       </div>`;
+ 
+    if(user.isGuest){
+      const wrap = document.querySelector("[data-guest-auth-wrap]");
+      const slot = document.querySelector("[data-guest-auth-slot]");
+      let wired = false;
+      document.querySelector("[data-show-auth]").addEventListener("click", ()=>{
+        const opening = wrap.style.display === "none";
+        wrap.style.display = opening ? "block" : "none";
+        if(opening && !wired){
+          slot.innerHTML = authTabsHTML(false);
+          wireAuthTabs(slot, ()=>{ renderAccountPage(); });
+          wired = true;
+        }
+      });
+    }
  
     document.querySelector("[data-logout]").addEventListener("click", async ()=>{
       await logout();
@@ -188,5 +244,7 @@
   await renderAccountPage();
 })();
 </script>
+
+
 </body>
 </html>

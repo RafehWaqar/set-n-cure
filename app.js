@@ -16,6 +16,21 @@ const SUPABASE_URL = "https://oqakvkmgrccubejxrzwm.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9xYWt2a21ncmNjdWJlanhyendtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ3OTc5NDQsImV4cCI6MjEwMDM3Mzk0NH0.lu7pDu_M_uxKJ0lb9OXZPjnlQGIhBizm8N5xV1OMSok";
 supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+
+
+const guestSessionReady = (async () => {
+  try{
+    const { data: { session } } = await supabase.auth.getSession();
+    if(!session){
+      const { error } = await supabase.auth.signInAnonymously();
+      if(error) console.error("Couldn't start an automatic guest session:", error.message);
+    }
+  }catch(e){
+    console.error("Couldn't start an automatic guest session:", e);
+  }
+})();
+
+
 const ADMIN_EMAIL = "rafehgoku@gmail.com";
 
 function getCart(){
@@ -70,14 +85,40 @@ function updateCartCount(){
   });
 }
 
-/* ---------- accounts ----------
-   Handled by Supabase Auth. "name" is stored in the user's
-   metadata at signup time rather than a separate table, since
-   that's all we need beyond what auth.users already tracks. */
 async function getCurrentUser(){
-  const { data: { user } } = await supabase.auth.getUser();
-  if(!user) return null;
-  return { id:user.id, email:user.email, name: user.user_metadata?.name || user.email };
+  try{
+    await guestSessionReady;
+    const { data: { user } } = await supabase.auth.getUser();
+    if(!user) return null;
+    return {
+      id:user.id,
+      email:user.email || null,
+      name: user.user_metadata?.name || (user.is_anonymous ? "Guest" : user.email),
+      isGuest: !!user.is_anonymous
+    };
+  }catch(e){
+    console.error("Supabase auth check failed:", e);
+    return null;
+  }
+}
+async function continueAsGuest(){
+  const { error } = await supabase.auth.signInAnonymously();
+  if(error) return {ok:false, error:error.message};
+  return {ok:true};
+}
+async function upgradeGuestAccount(name, email, password){
+  const { error } = await supabase.auth.updateUser({
+    email: email.trim().toLowerCase(),
+    password,
+    data: { name }
+  });
+  if(error) return {ok:false, error:error.message};
+  return {ok:true};
+}
+async function claimGuestOrders(guestId){
+  if(!guestId) return;
+  const { error } = await supabase.rpc("claim_guest_orders", { guest_id: guestId });
+  if(error) console.error("Couldn't merge guest orders:", error.message);
 }
 async function signup(name, email, password){
   const { error } = await supabase.auth.signUp({
@@ -93,7 +134,7 @@ async function login(email, password){
     email: email.trim().toLowerCase(),
     password
   });
-  if(error) return {ok:false, error:"That email and password don't match any account."};
+  if(error) return {ok:false, error:error.message};
   return {ok:true};
 }
 async function logout(){
@@ -134,6 +175,7 @@ async function placeOrder(address){
   const order = {
     id: "AB" + Date.now().toString().slice(-8),
     user_id: user.id,
+    customer_email: user.email || "Guest checkout",
     items: lines.map(l=>({id:l.id, name:l.product.name, qty:l.qty, price:l.product.price})),
     subtotal, shipping, total: subtotal + shipping,
     address,
@@ -144,7 +186,7 @@ async function placeOrder(address){
   clearCart();
   return {ok:true, order};
 }
-
+ 
 /* ---------- toast ---------- */
 function showToast(msg){
   let toast = document.querySelector(".toast");

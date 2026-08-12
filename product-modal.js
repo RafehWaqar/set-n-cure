@@ -23,7 +23,7 @@
       <div class="product-modal" data-product-modal role="dialog" aria-modal="true">
         <button class="modal-close" data-modal-close aria-label="Close">&times;</button>
         <div class="product-modal__art">
-          <img data-modal-img src="" alt="">
+          <img data-modal-img class="data-modal-img" src="" alt="">
           <button class="modal-nav modal-nav--prev" data-modal-prev aria-label="Previous picture">&larr;</button>
           <button class="modal-nav modal-nav--next" data-modal-next aria-label="Next picture">&rarr;</button>
           <div class="modal-dots" data-modal-dots></div>
@@ -121,7 +121,7 @@
   async function findGalleryImages(product){
     const found = [];
     for(let n = 1; n <= GALLERY_MAX; n++){
-      const url = `Website PICTURES/${product.id}${n}.jpg`;
+      const url = `${window.innerWidth <= 720 ? "Website" : "Square"} PICTURES/${product.id}${n}.jpg`;
       const ok = await imageExists(url);
       if(!ok) break;
       found.push(url);
@@ -165,7 +165,7 @@
 
     // show the card's existing image immediately, then swap in the
     // gallery once probing finishes so the modal never looks empty
-    const fallbackImg = `Website PICTURES/${product.id}.jpg`;
+    const fallbackImg = `${window.innerWidth <= 720 ? "Square" : "Website"} PICTURES/${product.id}.jpg`;
     galleryImages = [fallbackImg];
     galleryIndex = 0;
     document.querySelector("[data-modal-img]").src = fallbackImg;
@@ -219,6 +219,44 @@
       if(product) openProductModal(product);
     });
   }
+
+
+  function throttle(func, limit) {
+  let inThrottle = false;
+  return function() {
+    // If we recently ran the code, block it from running again
+    if (!inThrottle) {
+      func();
+      inThrottle = true;
+      // Unblock it after the time limit passes
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+}
+
+// The heavy action you want to run
+function updateAnimations() {
+  console.log("Window resized, updating animations...");
+  if (window.innerWidth <= 720) {
+    document.querySelectorAll("[data-modal-img]").forEach(img => {
+      src1 = img.getAttribute("src");
+      img.src = src1.replace("Square", "Website");
+    })
+    console.log("Switched to square images for small screens");
+  }
+  else {
+    document.querySelectorAll("[data-modal-img]").forEach(img => {
+      src1 = img.getAttribute("src");
+      img.src = src1.replace("Website", "Square");
+    })
+    console.log("ok");
+  }
+}
+
+// Run updateAnimations at most once every 200 milliseconds during resize
+window.addEventListener("resize", throttle(updateAnimations, 200));
+
+
 
   window.openProductModal = openProductModal;
   window.closeProductModal = closeProductModal;
