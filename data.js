@@ -5,11 +5,9 @@ const COLLECTIONS = [
   { key:"Covers",   name:"Mobile Covers", desc:"Real blooms sealed in resin and worn as earrings, rings and pendants."},
   { key:"Bookmarks",     name:"Bookmarks", desc:"Custom lettering and colour, poured and cured just for you."},
   { key:"Keyrings",      name:"Keyrings", desc:"Geode and floral faces that turn a wall into a centrepiece."},
-  { key:"accessories", name:"Accessories", desc:"Small everyday pieces with a handmade, one-of-one finish."},
-  { key:"coasters",    name:"Coasters & Trays", desc:"Tableware that doubles as a conversation piece."},
-  { key:"religious",   name:"Religious Art", desc:"Ayat and calligraphy pieces poured with care and gold leaf detail."},
-  { key:"candles",     name:"Soy Candles", desc:"Hand-poured soy candles to pair alongside your gift."},
-  { key:"candles",     name:"Soy Candles", desc:"Hand-poured soy candles to pair alongside your gift."},
+  { key:"Coasters", name:"Coasters", desc:"Small everyday pieces with a handmade, one-of-one finish."},
+  { key:"Plates",    name:"Plates", desc:"Tableware that doubles as a conversation piece."},
+  { key:"Rehal",   name:"Rehal", desc:"Ayat and calligraphy pieces poured with care and gold leaf detail."},
 ];
 
 const PRODUCTS = [
@@ -19,14 +17,12 @@ const PRODUCTS = [
   { id:"bookmark-paperclip-set", name:"Resin Bookmark & Paperclip Set", cat:"Bookmarks", price:1800, badge:"Bestseller" },
   { id:"bookmark",       name:"Resin Bookmark", cat:"Bookmarks",         price:1200},
   { id:"butterfly-pendant",   name:"Butterfly Pendant", cat:"Jewellery",         price:1500},
-  { id:"rose-perserved-bracelet",    name:"Rose Perserved Bracelet", cat:"Jewellery",     price:3800},
-  { id:"amber-soy-candle",    name:"Amber Rose Soy Candle", cat:"candles",           price:1500},
-  { id:"vanity-tray-blush",   name:"Blush Marble Vanity Tray", cat:"coasters",       price:3200},
-  { id:"cufflinks-forest",    name:"Forest Green Resin Cufflinks", cat:"accessories",price:1800},
-  { id:"engagement-plaque",   name:"Engagement Announcement Plaque", cat:"nikkah",   price:3900},
-  { id:"initial-pendant",     name:"Pressed Flower Initial Pendant", cat:"preserved",price:2200},
-  { id:"rose-gold-clock",     name:"Rose & Gold Table Clock", cat:"clocks",          price:4600},
-  { id:"quran-verse-tag",     name:"Quran Verse Bookmark Tag", cat:"religious",      price:1200},
+  { id:"rose-perserved-bracelet",    name:"Rose Perserved Bracelet", cat:"Jewellery",     price:800},
+  { id:"qul-plate",    name:"Customizable Resin Qul Plate", cat:"Plates",           price:6000},
+  { id:"resin-plate",   name:"Customizable Resin Plate", cat:"Plates",       price:3000},
+  { id:"coaster",    name:"Customizable Resin Coaster", cat:"Coasters",price:1800},
+  { id:"quran-rehal",   name:"Customizable Resin Butterfly Quran Rehal", cat:"Rehal",   price:7500},
+  { id:"jewellery-box",     name:"Customizable Resin Jewellery Box", cat:"Jewellery",price:2500},
 ];
 
 /* ---------- Resin-pour SVG art generator ----------
