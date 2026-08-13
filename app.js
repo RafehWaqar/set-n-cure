@@ -223,7 +223,7 @@ function productCardHTML(p){
 
 function collectionCardHTML(c, big){
   return `
-  <a class="collection-card" style="background-image: url('${window.innerWidth <= 720 ? "Mobile" : "Desktop"} Collections/${c.key}.jpg');" href="products.html?collection=${c.key}" style="${big?"aspect-ratio:16/10":""}">
+  <a class="collection-card" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3)), url('${window.innerWidth <= 720 ? "Mobile" : "Desktop"} Collections/${c.key}.jpg');" href="products.html?collection=${c.key}" style="${big?"aspect-ratio:16/10":""}">
     <div class="collection-card__label">
       <span class="eyebrow">Collection</span>
       <h3>${c.name}</h3>
@@ -321,23 +321,20 @@ function renderFooter(){
               <li><a href="products.html">All products</a></li>
               <li><a href="collections.html">Collections</a></li>
               <li><a href="cart.html">Cart</a></li>
-              <li><a href="account.html">My account</a></li>
+              <li><a href="account.html">My Account</a></li>
             </ul>
           </div>
           <div>
-            <h4>Info</h4>
+            <h4>Contact Us</h4>
             <ul>
-              <li><a href="#">Privacy policy</a></li>
-              <li><a href="#">Terms &amp; conditions</a></li>
-              <li><a href="#">How preservation works</a></li>
-              <li><a href="#">Contact</a></li>
+              <li><a href="#">+92 336 6660271</a></li>
             </ul>
           </div>
           <div>
-            <h4>Follow</h4>
+            <h4>Reach Out</h4>
             <div class="footer-social">
-              <a href="#" aria-label="Instagram">Instagram</a>
-              <a href="#" aria-label="TikTok">TikTok</a>
+              <a href="https://www.instagram.com/set_n_cure?igsh=MWQ1Ymprc3pnZjcwZw=="  class="ig" aria-label="Instagram"><i class="fa-brands fa-instagram fa-xl" style="color: var(--bottle);"></i></a>
+              <a href="https://wa.link/anizur" aria-label="WhatsApp" class="ws"><i class="fa-brands fa-whatsapp fa-xl" style="color: var(--bottle);"></i></a>
             </div>
           </div>
         </div>

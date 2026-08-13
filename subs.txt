@@ -105,3 +105,17 @@ ${p.badge ? `<span class="product-card__badge">${p.badge}</span>` : ""}
 
   renderFilters();
   renderGrid();
+
+
+
+  <!-- CTA -->
+  <section class="cta-strip">
+    <div class="wrap">
+      <h2>Get first look at new pours</h2>
+      <p>One email a month, mostly new pieces and a few behind-the-scenes pours. No spam.</p>
+      <form class="cta-form" onsubmit="event.preventDefault(); showToast('Thanks for subscribing!'); this.reset();">
+        <input type="email" required placeholder="you@email.com" aria-label="Email address">
+        <button class="btn btn-primary" type="submit">Subscribe</button>
+      </form>
+    </div>
+  </section>

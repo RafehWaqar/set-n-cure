@@ -625,9 +625,14 @@ header.site{
 .process{
   display:grid; grid-template-columns:repeat(3,1fr); gap:30px;
 }
+
+.how {
+  padding: 64px 20px;
+}
+
 @media (max-width:800px){ .process{grid-template-columns:1fr;} }
 .process__step{
-  background:#fff; border-radius:var(--radius); padding:30px 26px;
+  background:#fff; border-radius: 15px; padding:30px 26px;
   box-shadow:var(--shadow); position:relative;
 }
 .process__num{
@@ -639,10 +644,13 @@ header.site{
 
 /* ---------- story / quote ---------- */
 .story{
-  background:var(--ivory); color:var(--ivory); padding:70px 0;
+  background:var(--ivory); color:var(--ivory); padding:64px 20px;
   position:relative; overflow:hidden;
 }
 .story .wrap{position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; gap:50px; align-items:center;}
+.story .story-wrap {
+  padding: 0;
+}
 @media (max-width:860px){ .story .wrap{grid-template-columns:1fr;} }
 .story h2{color:var(--gold-light);}
 .story p{color:rgba(251,246,239,.85); font-size:1.02rem;}
@@ -834,8 +842,17 @@ footer.site a:hover{color:var(--gold-light);}
   padding: 20px;
 }
 
+.ws {
+  position: relative;
+  margin-top: 4px;
+  margin-left: 17px;
+}
 
-
+.ig {
+  position: relative;
+  margin-top: 4px;
+  margin-left: 5px;
+}
 
 @media (max-width:760px){ .account-dashboard{grid-template-columns:1fr;} }
 .account-side{
