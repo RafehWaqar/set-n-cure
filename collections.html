@@ -81,9 +81,8 @@
 
     document.querySelector("[data-collections-grid]").innerHTML =
       pageItems.map(c=>`
-        <a class="collection-card" href="products.html?collection=${c.key}">
+        <a class="collection-card" style="background-image: url('${window.innerWidth <= 720 ? "Mobile" : "Desktop"} Collections/${c.key}.jpg');" href="products.html?collection=${c.key}">
           <div class="collection-card__label">
-            <span class="eyebrow">Collection</span>
             <h3>${c.name}</h3>
             <p style="color:rgba(255,255,255,.85); font-size:.88rem; margin:6px 0 0;">${c.desc}</p>
           </div>

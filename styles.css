@@ -326,7 +326,6 @@ header.site{
   position:relative; border-radius: 25px; overflow:hidden;
   height:100%; display:flex; align-items:flex-end;
   box-shadow:var(--shadow);
-  background-image : url('Website PICTURES/coasters.jpg');
   background-position: center;
   background-size: cover;
 }

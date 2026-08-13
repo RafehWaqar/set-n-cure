@@ -5,8 +5,8 @@ const COLLECTIONS = [
   { key:"Covers",   name:"Mobile Covers", desc:"Real blooms sealed in resin and worn as earrings, rings and pendants."},
   { key:"Bookmarks",     name:"Bookmarks", desc:"Custom lettering and colour, poured and cured just for you."},
   { key:"Keyrings",      name:"Keyrings", desc:"Geode and floral faces that turn a wall into a centrepiece."},
-  { key:"Coasters", name:"Coasters", desc:"Small everyday pieces with a handmade, one-of-one finish."},
   { key:"Plates",    name:"Plates", desc:"Tableware that doubles as a conversation piece."},
+  { key:"Coasters", name:"Coasters", desc:"Small everyday pieces with a handmade, one-of-one finish."},
   { key:"Rehal",   name:"Rehal", desc:"Ayat and calligraphy pieces poured with care and gold leaf detail."},
 ];
 

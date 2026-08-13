@@ -223,7 +223,7 @@ function productCardHTML(p){
 
 function collectionCardHTML(c, big){
   return `
-  <a class="collection-card" href="products.html?collection=${c.key}" style="${big?"aspect-ratio:16/10":""}">
+  <a class="collection-card" style="background-image: url('${window.innerWidth <= 720 ? "Mobile" : "Desktop"} Collections/${c.key}.jpg');" href="products.html?collection=${c.key}" style="${big?"aspect-ratio:16/10":""}">
     <div class="collection-card__label">
       <span class="eyebrow">Collection</span>
       <h3>${c.name}</h3>
