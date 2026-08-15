@@ -269,25 +269,8 @@ function updateAnimations() {
 // Run updateAnimations at most once every 200 milliseconds during resize
 window.addEventListener("resize", throttle(updateAnimations, 200));
 
-
-
-
-
-function throttle(func, limit) {
-  let inThrottle = false;
-  return function() {
-    // If we recently ran the code, block it from running again
-    if (!inThrottle) {
-      func();
-      inThrottle = true;
-      // Unblock it after the time limit passes
-      setTimeout(() => inThrottle = false, limit);
-    }
-  };
-}
-
 // The heavy action you want to run
-function updateAnimations() {
+function updateAnimations1() {
   if (window.innerWidth <= 720) {
     document.querySelectorAll(".collection-card").forEach(img => {
       src1 = img.getAttribute("style");
@@ -303,7 +286,7 @@ function updateAnimations() {
 }
 
 // Run updateAnimations at most once every 200 milliseconds during resize
-window.addEventListener("resize", throttle(updateAnimations, 200));
+window.addEventListener("resize", throttle(updateAnimations1, 200));
 
 
 /* ---------- shared chrome ---------- */

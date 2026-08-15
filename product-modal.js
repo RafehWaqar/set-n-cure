@@ -221,7 +221,7 @@
   }
 
 
-  function throttle(func, limit) {
+function throttle(func, limit) {
   let inThrottle = false;
   return function() {
     // If we recently ran the code, block it from running again
@@ -235,26 +235,23 @@
 }
 
 // The heavy action you want to run
-function updateAnimations() {
-  console.log("Window resized, updating animations...");
+function updateAnimations2() {
   if (window.innerWidth <= 720) {
     document.querySelectorAll("[data-modal-img]").forEach(img => {
       src1 = img.getAttribute("src");
       img.src = src1.replace("Square", "Website");
     })
-    console.log("Switched to square images for small screens");
   }
   else {
     document.querySelectorAll("[data-modal-img]").forEach(img => {
       src1 = img.getAttribute("src");
       img.src = src1.replace("Website", "Square");
     })
-    console.log("ok");
   }
 }
 
 // Run updateAnimations at most once every 200 milliseconds during resize
-window.addEventListener("resize", throttle(updateAnimations, 200));
+window.addEventListener("resize", throttle(updateAnimations2, 200));
 
 
 

@@ -918,7 +918,7 @@ footer.site a:hover{color:var(--gold-light);}
     grid-column:span 1;
   }
   .product-card:nth-child(8n+1) .product-card__art{
-    height: 100%;
+    height: auto;
     width: 100%;
     aspect-ratio: 1/1;
   }
