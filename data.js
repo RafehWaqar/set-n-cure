@@ -1,28 +1,28 @@
 /* ---------- Brand data ---------- */
 
 const COLLECTIONS = [
-  { key:"Jewellery",      name:"Jewellery", desc:"Statement plaques for the big day, personalised with names and dates."},
-  { key:"Covers",   name:"Mobile Covers", desc:"Real blooms sealed in resin and worn as earrings, rings and pendants."},
-  { key:"Bookmarks",     name:"Bookmarks", desc:"Custom lettering and colour, poured and cured just for you."},
-  { key:"Keyrings",      name:"Keyrings", desc:"Geode and floral faces that turn a wall into a centrepiece."},
-  { key:"Plates",    name:"Plates", desc:"Tableware that doubles as a conversation piece."},
-  { key:"Coasters", name:"Coasters", desc:"Small everyday pieces with a handmade, one-of-one finish."},
-  { key:"Rehal",   name:"Rehal", desc:"Ayat and calligraphy pieces poured with care and gold leaf detail."},
+  { key:"Jewellery",      name:"Jewellery", desc:"Handmade resin pendants, earrings, and bracelets crafted with real preserved florals and delicate details."},
+  { key:"Covers",   name:"Mobile Covers", desc:"Mobile covers customized with your choice of aesthetics."},
+  { key:"Bookmarks",     name:"Bookmarks", desc:"Pretty handcrafted resin bookmarks to elevate your reading routine."},
+  { key:"Keychains",      name:"Keychains", desc:"Customizable keychains made with resin, to carry your identity and style wherever you go."},
+  { key:"Plates",    name:"Plates", desc:"Decorative handmade resin display plates featuring custom text, pearls, and real florals"},
+  { key:"Coasters", name:"Coasters", desc:"Aesthetic floral resin coasters to protect your tables in style."},
+  { key:"Rehal",   name:"Rehal", desc:"Handcrafted resin Quran rehals made with beautiful shimmer and stylish aesthetics."},
 ];
 
 const PRODUCTS = [
-  { id:"mobile-cover",        name:"Resin Mobile Cover", cat:"Covers",   price:2500, badge:"Bestseller" },
-  { id:"keyring",  name:"Customizable Resin Initial Keyring", cat:"Keyrings",     price:4200, badge:"Made to order" },
-  { id:"pendant-earing-set",    name:"Resin Pendant & Earring Set", cat:"Jewellery", price:2800},
-  { id:"bookmark-paperclip-set", name:"Resin Bookmark & Paperclip Set", cat:"Bookmarks", price:1800, badge:"Bestseller" },
-  { id:"bookmark",       name:"Resin Bookmark", cat:"Bookmarks",         price:1200},
-  { id:"butterfly-pendant",   name:"Butterfly Pendant", cat:"Jewellery",         price:1500},
-  { id:"rose-perserved-bracelet",    name:"Rose Perserved Bracelet", cat:"Jewellery",     price:800},
-  { id:"qul-plate",    name:"Customizable Resin Qul Plate", cat:"Plates",           price:6000},
-  { id:"resin-plate",   name:"Customizable Resin Plate", cat:"Plates",       price:3000},
-  { id:"coaster",    name:"Customizable Resin Coaster", cat:"Coasters",price:1800},
-  { id:"quran-rehal",   name:"Customizable Resin Butterfly Quran Rehal", cat:"Rehal",   price:7500},
-  { id:"jewellery-box",     name:"Customizable Resin Jewellery Box", cat:"Jewellery",price:2500},
+  { id:"mobile-cover",        name:"Resin Mobile Cover", cat:"Covers", desc: "Handmade resin mobile cover customized any way you like topped off with gold or any aesthetics you like ",  price:2500, badge:"Bestseller"},
+  { id:"keyring",  name:"Customizable Resin Initial Keychain", cat:"Keychains", desc: "Cute initial resin keychain with real flowers and tassels, customized just for you.",    price:1200, badge:"Made to order" },
+  { id:"pendant-earing-set",    name:"Resin Pendant & Earring Set", desc: "Handcrafted resin jewelry set with delicate detail that instantly elevates any outfit.", cat:"Jewellery", price:2800},
+  { id:"bookmark-paperclip-set", name:"Resin Bookmark & Paperclip Set", cat:"Bookmarks", desc: "Customizable resin bookmark and paperclip set, perfect for adding a touch of elegance to your desk.", price:1800, badge:"Bestseller" },
+  { id:"bookmark",       name:"Resin Bookmark", cat:"Bookmarks", desc: "Customizable resin bookmark with unique design, ideal for marking your place in a book.",         price:1200},
+  { id:"butterfly-pendant",   name:"Butterfly Pendant", cat:"Jewellery", desc: "Elegant resin pendant shaped like a butterfly, perfect for adding a whimsical touch to any outfit.",         price:1500},
+  { id:"rose-perserved-bracelet",    name:"Rose Perserved Bracelet", cat:"Jewellery", desc: "Beautiful resin bracelet featuring a preserved rose, creating a timeless accessory.",     price:800},
+  { id:"qul-plate",    name:"Customizable Resin Qul Plate", cat:"Plates", desc: "Customizable resin plate with unique design, perfect for adding a touch of elegance to your dining experience.",           price:6000},
+  { id:"resin-plate",   name:"Customizable Resin Plate", cat:"Plates", desc: "Customizable resin plate with unique design, perfect for adding a touch of elegance to your dining experience.",       price:3000},
+  { id:"coaster",    name:"Customizable Resin Coaster", cat:"Coasters", desc: "Customizable resin coaster with unique design, perfect for protecting your surfaces.",price:1800},
+  { id:"quran-rehal",   name:"Customizable Resin Butterfly Quran Rehal", cat:"Rehal", desc: "Customizable resin butterfly Quran rehal with unique calligraphy design.",   price:7500},
+  { id:"jewellery-box",     name:"Customizable Resin Jewellery Box", cat:"Jewellery", desc: "Customizable resin jewellery box with unique design, perfect for storing and displaying your favourite pieces.",price:2500},
 ];
 
 /* ---------- Resin-pour SVG art generator ----------

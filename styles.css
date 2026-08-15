@@ -639,8 +639,8 @@ header.site{
   font-family:'Fraunces',serif; font-size:2.6rem; color:var(--gold);
   line-height:1; margin-bottom:10px; display:block;
 }
-.process__step h3{font-size:1.1rem;}
-.process__step p{color:#5b524b; font-size:.95rem; margin:0;}
+.process__step h3{font-size:1.1rem; color: #000;}
+.process__step p{color:#000; font-size:.95rem; margin:0;}
 
 /* ---------- story / quote ---------- */
 .story{

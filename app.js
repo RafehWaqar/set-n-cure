@@ -221,6 +221,12 @@ function productCardHTML(p){
   </article>`;
 }
 
+
+
+
+
+
+
 function collectionCardHTML(c, big){
   return `
   <a class="collection-card" style="background-image: linear-gradient(rgba(0, 0, 0, 0.3)), url('${window.innerWidth <= 720 ? "Mobile" : "Desktop"} Collections/${c.key}.jpg');" href="products.html?collection=${c.key}" style="${big?"aspect-ratio:16/10":""}">
@@ -246,24 +252,59 @@ function throttle(func, limit) {
 
 // The heavy action you want to run
 function updateAnimations() {
-  console.log("Window resized, updating animations...");
   if (window.innerWidth <= 720) {
     document.querySelectorAll(".prod-img").forEach(img => {
       src1 = img.getAttribute("src");
       img.src = src1.replace("Website", "Square");
     })
-    console.log("Switched to square images for small screens");
   }
   else {
     document.querySelectorAll(".prod-img").forEach(img => {
       src1 = img.getAttribute("src");
       img.src = src1.replace("Square", "Website");
-    })
+    });
   }
 }
 
 // Run updateAnimations at most once every 200 milliseconds during resize
 window.addEventListener("resize", throttle(updateAnimations, 200));
+
+
+
+
+
+function throttle(func, limit) {
+  let inThrottle = false;
+  return function() {
+    // If we recently ran the code, block it from running again
+    if (!inThrottle) {
+      func();
+      inThrottle = true;
+      // Unblock it after the time limit passes
+      setTimeout(() => inThrottle = false, limit);
+    }
+  };
+}
+
+// The heavy action you want to run
+function updateAnimations() {
+  if (window.innerWidth <= 720) {
+    document.querySelectorAll(".collection-card").forEach(img => {
+      src1 = img.getAttribute("style");
+      img.style = src1.replace("Desktop", "Mobile");
+    })
+  }
+  else {
+    document.querySelectorAll(".collection-card").forEach(img => {
+      src1 = img.getAttribute("style");
+      img.style = src1.replace("Mobile", "Desktop");
+    });
+  }
+}
+
+// Run updateAnimations at most once every 200 milliseconds during resize
+window.addEventListener("resize", throttle(updateAnimations, 200));
+
 
 /* ---------- shared chrome ---------- */
 async function renderHeader(active){
@@ -293,7 +334,7 @@ async function renderHeader(active){
         </a>
         <nav class="nav__links" data-nav>${navLinks}</nav>
         <div class="nav__actions">
-          <a class="account-link" href="${user && user.email === ADMIN_EMAIL ? 'admin.html' : 'account.html'}" aria-label="Account">${user ? "Hi, " + user.name.split(" ")[0] : "Log in"}</a>
+          <a class="account-link" href="${user && user.email === ADMIN_EMAIL ? 'admin.html' : 'account.html'}" aria-label="Account">${user ? "Hi, " + user.name.split(" ")[0] : "Hi, Guest"}</a>
           <a class="cart-btn" href="cart.html" aria-label="Cart">
             Cart <span class="cart-count" data-cart-count>0</span>
           </a>
