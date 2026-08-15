@@ -164,8 +164,9 @@
   async function renderLoggedIn(user){
     document.querySelector("[data-title]").textContent = user.isGuest ? "You're checking out as a guest" : "Welcome back, " + user.name.split(" ")[0];
     document.querySelector("[data-subtitle]").textContent = user.isGuest ? "This order history only lives in this browser." : user.email;
- 
+    console.log(user);
     const orders = await ordersForCurrentUser();
+    console.log(orders);
  
     root.innerHTML = `
       <div class="account-dashboard">
@@ -202,20 +203,16 @@
       });
     }
  
-    document.querySelector("[data-logout]").addEventListener("click", async ()=>{
-      await logout();
-      await renderHeader();
-      
-    });
- 
     const list = document.querySelector("[data-orders-list]");
     if(!orders.length){
+      console.log("No orders found for user:", user);
       list.innerHTML = `<div class="empty-cart" style="padding:40px 20px;">
         <h3>No orders yet</h3>
         <p style="color: var(--bottle); margin-bottom:20px;">Once you check out, your orders will show up here.</p>
         <a href="products.html" class="btn btn-primary">Shop products</a>
       </div>`;
     } else {
+      console.log("Orders found for user:", user, orders);
       list.innerHTML = orders.map(o=>`
         <div class="order-card">
           <div class="order-card__head">
@@ -234,6 +231,13 @@
         </div>
       `).join("");
     }
+
+
+    document.querySelector("[data-logout]").addEventListener("click", async ()=>{
+      await logout();
+      await renderHeader();
+      await renderAccountPage();
+    });
   }
  
   async function renderAccountPage(){

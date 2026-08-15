@@ -155,7 +155,9 @@ async function requireLogin(redirectTo){
    their own rows — enforced by Postgres, not by this JS. */
 async function ordersForCurrentUser(){
   const user = await getCurrentUser();
-  if(!user) return [];
+  if(!user) {
+    return [];
+  }
   const { data, error } = await supabase
     .from("orders")
     .select("*")
