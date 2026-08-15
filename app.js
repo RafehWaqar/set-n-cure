@@ -210,7 +210,7 @@ function productCardHTML(p){
   return `
   <article class="product-card">
     <div class="product-card__art">
-      <img src="${window.innerWidth <= 720 ? "Square" : "Website"} PICTURES/${p.id}.jpg" alt="${p.name}" loading="lazy" class="prod-img"/>
+      <img src="${window.innerWidth <= 720 ? "Mobile" : "Desktop"} PICTURES/${p.id}.jpg" alt="${p.name}" class="prod-img"/>
     </div>
     <div class="product-card__body">
       <span class="product-card__cat">${collection ? collection.name : ""}</span>
@@ -257,13 +257,13 @@ function updateAnimations() {
   if (window.innerWidth <= 720) {
     document.querySelectorAll(".prod-img").forEach(img => {
       src1 = img.getAttribute("src");
-      img.src = src1.replace("Website", "Square");
+      img.src = src1.replace("Desktop", "Mobile");
     })
   }
   else {
     document.querySelectorAll(".prod-img").forEach(img => {
       src1 = img.getAttribute("src");
-      img.src = src1.replace("Square", "Website");
+      img.src = src1.replace("Mobile", "Desktop");
     });
   }
 }

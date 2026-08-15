@@ -121,7 +121,7 @@
   async function findGalleryImages(product){
     const found = [];
     for(let n = 1; n <= GALLERY_MAX; n++){
-      const url = `${window.innerWidth <= 720 ? "Website" : "Square"} PICTURES/${product.id}${n}.jpg`;
+      const url = `${window.innerWidth <= 720 ? "Mobile" : "Desktop"} PICTURES/${product.id}${n}.jpg`;
       const ok = await imageExists(url);
       if(!ok) break;
       found.push(url);
@@ -165,7 +165,7 @@
 
     // show the card's existing image immediately, then swap in the
     // gallery once probing finishes so the modal never looks empty
-    const fallbackImg = `${window.innerWidth <= 720 ? "Square" : "Website"} PICTURES/${product.id}.jpg`;
+    const fallbackImg = `${window.innerWidth <= 720 ? "Mobile" : "Desktop"} PICTURES/${product.id}.jpg`;
     galleryImages = [fallbackImg];
     galleryIndex = 0;
     document.querySelector("[data-modal-img]").src = fallbackImg;
@@ -239,13 +239,13 @@ function updateAnimations2() {
   if (window.innerWidth <= 720) {
     document.querySelectorAll("[data-modal-img]").forEach(img => {
       src1 = img.getAttribute("src");
-      img.src = src1.replace("Square", "Website");
+      img.src = src1.replace("Desktop", "Mobile");
     })
   }
   else {
     document.querySelectorAll("[data-modal-img]").forEach(img => {
       src1 = img.getAttribute("src");
-      img.src = src1.replace("Website", "Square");
+      img.src = src1.replace("Mobile", "Desktop");
     })
   }
 }
