@@ -13,8 +13,8 @@ const COLLECTIONS = [
 const PRODUCTS = [
   { id:"mobile-cover",        name:"Resin Mobile Cover", cat:"Covers", desc: "Handmade resin mobile cover customized any way you like topped off with gold or any aesthetics you like ",  price:2500, badge:"Bestseller"},
   { id:"keyring",  name:"Customizable Resin Initial Keychain", cat:"Keychains", desc: "Cute initial resin keychain with real flowers and tassels, customized just for you.",    price:1200, badge:"Made to order" },
-  { id:"pendant-earing-set",    name:"Resin Pendant & Earring Set", desc: "Handcrafted resin jewelry set with delicate detail that instantly elevates any outfit.", cat:"Jewellery", price:2800},
-  { id:"bookmark-paperclip-set", name:"Resin Bookmark & Paperclip Set", cat:"Bookmarks", desc: "Customizable resin bookmark and paperclip set, perfect for adding a touch of elegance to your desk.", price:1800, badge:"Bestseller" },
+  { id:"pendant-earing-set",    name:"Resin Pendant & Earring Set", desc: "Handcrafted resin jewelry set with delicate detail that instantly elevates any outfit.", cat:"Jewellery", price:1800},
+  { id:"bookmark-paperclip-set", name:"Resin Bookmark & Paperclip Set", cat:"Bookmarks", desc: "Customizable resin bookmark and paperclip set, perfect for adding a touch of elegance to your desk.", price:1600, badge:"Bestseller" },
   { id:"bookmark",       name:"Resin Bookmark", cat:"Bookmarks", desc: "Customizable resin bookmark with unique design, ideal for marking your place in a book.",         price:1200},
   { id:"butterfly-pendant",   name:"Butterfly Pendant", cat:"Jewellery", desc: "Elegant resin pendant shaped like a butterfly, perfect for adding a whimsical touch to any outfit.",         price:1500},
   { id:"rose-perserved-bracelet",    name:"Rose Perserved Bracelet", cat:"Jewellery", desc: "Beautiful resin bracelet featuring a preserved rose, creating a timeless accessory.",     price:800},
